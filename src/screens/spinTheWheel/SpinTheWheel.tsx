@@ -13,13 +13,15 @@ const SpinTheWheel = () => {
   const spinTheWheelsettings: initialType | null = useSelector(
     getSpinTheWheelSettings
   );
+
   const RenderComponent = () => {
     return (
       <WheelComponent
         segments={spinTheWheelsettings?.segments}
         segColors={spinTheWheelsettings?.segColors}
-        winningSegment={"cat"}
-        onFinished={(winner: string) => onFinished(winner)}
+        onFinished={(winner: string) => {
+          onFinished(winner);
+        }}
         primaryColor={spinTheWheelsettings?.primaryColor}
         contrastColor="white"
         buttonText="Spin"

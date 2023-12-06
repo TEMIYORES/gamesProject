@@ -1,4 +1,13 @@
 import { useEffect, useState } from "react";
+import {
+  getSpinTheWheelSettings,
+  initialType,
+} from "../slices/spinthewheelSettings";
+import { useSelector } from "react-redux";
+interface Item {
+  label: string;
+  percentage: number;
+}
 const WheelComponent = ({
   segments,
   segColors,
@@ -34,6 +43,36 @@ const WheelComponent = ({
       window.scrollTo(0, 1);
     }, 0);
   }, []);
+
+  const spinTheWheelsettings: initialType | null = useSelector(
+    getSpinTheWheelSettings
+  );
+  const getRandomItem = (items: Item[]): Item | undefined => {
+    let total = 0;
+    items.forEach((item) => {
+      total += item.percentage;
+    });
+    let random = Math.floor(Math.random() * total);
+    for (const item of items) {
+      if (random < item.percentage) {
+        return item;
+      }
+      random -= item.percentage;
+    }
+  };
+  const generateBiasedOutput: () => string | null | undefined = () => {
+    if (spinTheWheelsettings?.probability) {
+      const selected = getRandomItem(spinTheWheelsettings.probability);
+      if (selected) {
+        console.log("based output", selected.label);
+        return selected?.label;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
   const wheelInit = () => {
     initCanvas();
     wheelDraw();
@@ -74,6 +113,7 @@ const WheelComponent = ({
       progress = duration / upTime;
       angleDelta = maxSpeed * Math.sin((progress * Math.PI) / 2);
     } else {
+      winningSegment = generateBiasedOutput();
       if (winningSegment) {
         if (currentSegment === winningSegment && frames > segments.length) {
           progress = duration / upTime;
