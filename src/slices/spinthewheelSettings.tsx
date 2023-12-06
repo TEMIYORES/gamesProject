@@ -14,8 +14,8 @@ export interface initialType {
   }[];
 }
 const initialState: initialType | null = {
-  backgroundColor: "#008000",
-  numberOfSpins: 20,
+  backgroundColor: "#ddd",
+  numberOfSpins: 5,
   primaryColor: "#008000",
   probability: [
     { label: "cat", percentage: 10 },
@@ -39,6 +39,9 @@ const spinthewheel = createSlice({
     setSpinTheWheelSettings: (_state, action) => {
       return action.payload;
     },
+    updateSpinsLeft: (state, action) => {
+      return { ...state, numberOfSpins: action.payload };
+    },
   },
 });
 
@@ -48,5 +51,6 @@ export const getSpinTheWheelSettings: (
   return state.spinthewheel;
 };
 
-export const { setSpinTheWheelSettings } = spinthewheel.actions;
+export const { setSpinTheWheelSettings, updateSpinsLeft } =
+  spinthewheel.actions;
 export default spinthewheel.reducer;

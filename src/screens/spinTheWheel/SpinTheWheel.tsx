@@ -5,6 +5,7 @@ import {
   initialType,
 } from "../../slices/spinthewheelSettings";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const SpinTheWheel = () => {
   const onFinished = (winner: string) => {
@@ -12,6 +13,9 @@ const SpinTheWheel = () => {
   };
   const spinTheWheelsettings: initialType | null = useSelector(
     getSpinTheWheelSettings
+  );
+  const [backgroundColor, _setBackgroundColor] = useState(
+    spinTheWheelsettings?.backgroundColor
   );
 
   const RenderComponent = () => {
@@ -34,7 +38,7 @@ const SpinTheWheel = () => {
     );
   };
   return (
-    <div>
+    <div className={`bg-[${backgroundColor}] min-h-screen`}>
       {spinTheWheelsettings ? (
         <RenderComponent />
       ) : (
