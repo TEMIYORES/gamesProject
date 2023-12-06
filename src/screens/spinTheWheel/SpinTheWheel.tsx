@@ -1,27 +1,53 @@
+import { useSelector } from "react-redux";
 import WheelComponent from "../../components/WheelComponent";
+import {
+  getSpinTheWheelSettings,
+  initialType,
+} from "../../slices/spinthewheelSettings";
+import { Link } from "react-router-dom";
 
 const SpinTheWheel = () => {
-  const segments = ["Manoj", "Pip", "Ravi", "Abdul", "Siddhesh", "Komal"];
-  const segColors = ["#EE4040", "#F0CF50", "#815CD1", "#3DA5E0", "#34A24F"];
   const onFinished = (winner: string) => {
     console.log(winner);
   };
-  return (
-    <div>
+  const spinTheWheelsettings: initialType | null = useSelector(
+    getSpinTheWheelSettings
+  );
+  const RenderComponent = () => {
+    return (
       <WheelComponent
-        segments={segments}
-        segColors={segColors}
-        winningSegment={"Pip"}
+        segments={spinTheWheelsettings?.segments}
+        segColors={spinTheWheelsettings?.segColors}
+        winningSegment={"cat"}
         onFinished={(winner: string) => onFinished(winner)}
-        primaryColor="black"
+        primaryColor={spinTheWheelsettings?.primaryColor}
         contrastColor="white"
         buttonText="Spin"
         isOnlyOnce={false}
-        size={150}
+        size={200}
         upDuration={500}
         downDuration={600}
         fontFamily="Arial"
       />
+    );
+  };
+  return (
+    <div>
+      {spinTheWheelsettings ? (
+        <RenderComponent />
+      ) : (
+        <div className="w-full flex justify-center items-center">
+          <span>
+            No game settings{" "}
+            <Link
+              className="text-blue-300"
+              to={"/campaigns/spin-the-wheel/settings"}
+            >
+              go to settings
+            </Link>
+          </span>
+        </div>
+      )}
     </div>
   );
 };

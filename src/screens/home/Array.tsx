@@ -1,33 +1,61 @@
-import { useState } from "react";
+import React from "react";
 
-const ClickEffectButton = ({
-  label,
-  clickFunction,
-}: {
+interface Item {
   label: string;
-  clickFunction: () => void;
-}) => {
-  const [clicked, setClicked] = useState(false);
+  percentage: number;
+}
 
-  const handleClick = () => {
-    setClicked(true);
-    setTimeout(() => {
-      setClicked(false);
-    }, 1000); // Reset the clicked state after 300 milliseconds
-    clickFunction();
+interface BiasedOutputState {
+  items: Item[];
+  result: string | null;
+}
+
+class BiasedOutput extends React.Component<{}, BiasedOutputState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      items: [
+        { label: "A", percentage: 30 },
+        { label: "B", percentage: 20 },
+        { label: "C", percentage: 50 },
+        // Add more items as needed...
+      ],
+      result: null,
+    };
+  }
+
+  getRandomItem = (): Item => {
+    const { items } = this.state;
+    let total = 0;
+    items.forEach((item) => {
+      total += item.percentage;
+    });
+    let random = Math.floor(Math.random() * total);
+    for (const item of items) {
+      if (random < item.percentage) {
+        return item;
+      }
+      random -= item.percentage;
+    }
+    return items[0]; // Default return, in case of issues
   };
 
-  return (
-    <button
-      type="submit"
-      className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none transition duration-300 ${
-        clicked ? "bg-blue-700" : ""
-      }`}
-      onClick={handleClick}
-    >
-      {label}
-    </button>
-  );
-};
+  generateBiasedOutput = (): void => {
+    const result = this.getRandomItem();
+    this.setState({ result: result.label });
+  };
 
-export default ClickEffectButton;
+  render() {
+    const { result } = this.state;
+    return (
+      <div>
+        <button onClick={this.generateBiasedOutput}>
+          Generate Biased Output
+        </button>
+        {result && <p>Biased Output: {result}</p>}
+      </div>
+    );
+  }
+}
+
+export default BiasedOutput;

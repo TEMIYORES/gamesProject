@@ -12,12 +12,16 @@ import {
 import WithoutNavbar from "./components/WithoutNavbar";
 import PrivateRoute from "./components/PrivateRoute";
 import WithNavbar from "./components/WithNavbar";
-import SpinTheWheel from "./screens/spinTheWheel/SpinTheWheelSettings.tsx";
 import ScratchCard from "./screens/scratchCard/ScratchCard.tsx";
 import Quiz from "./screens/quiz/Quiz.tsx";
 import CodeGiveAway from "./screens/codeGiveAway/CodeGiveAway.tsx";
 import Puzzle from "./screens/puzzle/Puzzle.tsx";
 import ReferralCampaign from "./screens/referralCampaign/ReferralCampaign.tsx";
+import SpinTheWheelSettings from "./screens/spinTheWheel/SpinTheWheelSettings.tsx";
+import { Provider } from "react-redux";
+import store from "./store.tsx";
+import { ToastContainer } from "react-toastify";
+import SpinTheWheel from "./screens/spinTheWheel/SpinTheWheel.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +29,10 @@ const router = createBrowserRouter(
       {/* Pages with main Navbar */}
       <Route path="" element={<WithNavbar />}>
         <Route index={true} element={<Home />} />
+        <Route
+          path="campaigns/spin-the-wheel/settings"
+          element={<SpinTheWheelSettings />}
+        />
         <Route path="campaigns/spin-the-wheel" element={<SpinTheWheel />} />
         <Route path="campaigns/scratch-card" element={<ScratchCard />} />
         <Route path="campaigns/quiz" element={<Quiz />} />
@@ -51,7 +59,10 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <ToastContainer />
+        <RouterProvider router={router} />
+      </Provider>
     </React.StrictMode>
   </React.StrictMode>
 );

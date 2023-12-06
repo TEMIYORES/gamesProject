@@ -209,15 +209,18 @@ const WheelComponent = ({
   return (
     <div id="wheel" className="relative">
       <canvas
-        className="mx-auto"
+        className="mx-auto border-2 border-blue-300 flex justify-center items-center"
         id="canvas"
-        width="500"
-        height="550"
+        width="600"
+        height="600"
         style={{
           pointerEvents: isFinished && isOnlyOnce ? "none" : "auto",
         }}
       />
-      <span id="textOverlay" className="absolute">
+      <span
+        id="textOverlay"
+        className="absolute border-2 p-10 rounded-full bg-blue-300 cursor-pointer opacity-0 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+      >
         spin
       </span>
     </div>

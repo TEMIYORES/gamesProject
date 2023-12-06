@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
-import ClickEffectButton from "../home/Array";
-// import WheelComponent from "../../components/WheelComponent";
+import { useDispatch } from "react-redux";
+import { setSpinTheWheelSettings } from "../../slices/spinthewheelSettings";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "iconsax-react";
+import ClickEffectButton from "../../components/ClickEffectButton";
 
 const SpinTheWheelSettings = () => {
   const [contentsErr, setContentsErr] = useState<string | undefined>(undefined);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [isFormValid, setisFormValid] = useState<boolean>(false);
   const [probability, setProbability] = useState<
     { label: string; percentage: number }[]
   >([]);
@@ -32,6 +36,8 @@ const SpinTheWheelSettings = () => {
       contents: "",
     },
   });
+  const dispatch = useDispatch();
+
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   let errContents = errors?.contents?.message;
@@ -56,6 +62,8 @@ const SpinTheWheelSettings = () => {
         numberOfSpins: numberofspins,
         probability: probability,
       };
+      setisFormValid(true);
+      dispatch(setSpinTheWheelSettings(formData));
       console.log({ formData });
     } catch (err) {
       console.log(err);
@@ -246,8 +254,21 @@ const SpinTheWheelSettings = () => {
               </div>
             </div>
           </div>
-
-          <ClickEffectButton label={"Update Wheel"} clickFunction={() => {}} />
+          <div className="w-full flex justify-around items-center">
+            <ClickEffectButton
+              label={"Update Wheel"}
+              clickFunction={() => {}}
+            />
+            {isFormValid && (
+              <Link
+                to="/campaigns/spin-the-wheel"
+                className="flex items-center gap-2"
+              >
+                Go to game
+                <ArrowRight size="32" color="#FF8A65" />
+              </Link>
+            )}
+          </div>
         </form>
       </div>
     </div>

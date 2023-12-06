@@ -10,7 +10,7 @@ const Sidebar = () => {
   const Menus = [
     {
       title: "Spin the wheel",
-      path: "/campaigns/spin-the-wheel",
+      path: "/campaigns/spin-the-wheel/settings",
       icon: (
         <Home2
           size="30"
