@@ -14,7 +14,7 @@ export interface initialType {
   }[];
 }
 const initialState: initialType | null = {
-  backgroundColor: "#ddd",
+  backgroundColor: "#ff0000",
   numberOfSpins: 5,
   primaryColor: "#008000",
   probability: [
