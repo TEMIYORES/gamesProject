@@ -7,6 +7,7 @@ import { setSpinTheWheelSettings } from "../../slices/spinthewheelSettings";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "iconsax-react";
 import ClickEffectButton from "../../components/ClickEffectButton";
+import ColorPicker from "../../components/ColorPicker";
 
 const SpinTheWheelSettings = () => {
   const [contentsErr, setContentsErr] = useState<string | undefined>(undefined);
@@ -22,13 +23,15 @@ const SpinTheWheelSettings = () => {
   const [selectedBackgroundColor, setSelectedBackgroundColor] = useState<
     string[]
   >([]);
-  const [numberofspins, setnumberofspins] = useState(0); // Initializing value as 0
-
+  const [numberofspins, setnumberofspins] = useState<number | string>(""); // Initializing value as 0
   const handleNumberOfSpins = (e: any) => {
     const inputValue = parseInt(e.target.value, 10);
     // Allow positive numbers only
-    if (!isNaN(inputValue) && inputValue >= 0) {
+    if (isNaN(inputValue) || inputValue >= 0) {
       setnumberofspins(inputValue);
+      if (isNaN(inputValue)) {
+        setnumberofspins(1);
+      }
     }
   };
   const form = useForm({
@@ -98,18 +101,32 @@ const SpinTheWheelSettings = () => {
   }
   const query: Option[] = colors;
   const handleSearchInputChange = (query: any) => {
-    if (query) {
-      const selectedOptions = (query as Option[]).map((option) => option.value);
-      setSelectedColors([...selectedOptions]);
-    } else {
-      setSelectedColors([]);
+    console.log("colors", query.length);
+    console.log("probability", probability.length);
+    if (query.length <= probability.length) {
+      if (query) {
+        const selectedOptions = (query as Option[]).map(
+          (option) => option.value
+        );
+        setSelectedColors([...selectedOptions]);
+      } else {
+        setSelectedColors([]);
+      }
     }
   };
+  const isOptionDisabled = (option: Option): boolean => {
+    return (
+      selectedColors.length >= probability.length &&
+      !selectedColors.find((item: any) => item === option.value)
+    );
+  };
+
   const handleBorderColor = (data: any) => {
     setSelectedBorderColor(data.value);
   };
   const handleBackgroundColor = (data: any) => {
-    setSelectedBackgroundColor(data.value);
+    setSelectedBackgroundColor(data);
+    console.log(data);
   };
   const handleSpinnerColor = (data: any) => {
     setSelectedSpinnerColor(data.value);
@@ -130,14 +147,14 @@ const SpinTheWheelSettings = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full p-8 ">
+      <div className="w-full p-4 lg:p-8">
         <h2 className="font-bold text-base">Create Spin the wheel</h2>
         <form
           onSubmit={handleSubmit(onSubmit)}
           noValidate
           className="flex flex-col items-center"
         >
-          <div className="flex flex-col items-center w-full mt-10">
+          <div className="flex flex-col items-center w-full mt-5 md:mt-10 ">
             <div className="w-full flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
               <label htmlFor="contents" className="mb-2 font-bold">
                 Content on wheel
@@ -147,7 +164,7 @@ const SpinTheWheelSettings = () => {
                 required
                 {...register("contents", { required: "Content is required" })}
                 placeholder="Enter contents separated by comma ','"
-                className="py-2 px-2 border-none outline-none"
+                className="py-2 px-2 border border-slate-400 outline-none"
                 onBlur={handleBlur}
               />
               <small
@@ -170,43 +187,31 @@ const SpinTheWheelSettings = () => {
                 className="w-full outline-none shadow-none border-none"
                 isMulti
                 options={query}
+                isOptionDisabled={isOptionDisabled}
                 placeholder="Search..."
                 onChange={handleSearchInputChange}
               />
             </div>
-            <div className="w-full flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
-              <label htmlFor="contents" className="mb-2 font-bold">
-                Background Color
-              </label>
-              <Select
-                classNames={{
-                  control: () => "border border-none shadow-none rounded-md ",
-                }}
-                className="w-full outline-none shadow-none border-none"
-                options={query}
-                placeholder="Search..."
-                onChange={handleBackgroundColor}
-              />
-            </div>
-            <div className="w-full flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
-              <label htmlFor="contents" className="mb-2 font-bold">
-                Wheel Spinner Color
-              </label>
-              <Select
-                classNames={{
-                  control: () => "border border-none shadow-none rounded-md ",
-                }}
-                className="w-full outline-none shadow-none border-none"
-                options={query}
-                placeholder="Search..."
-                onChange={handleSpinnerColor}
-              />
-            </div>
-            <div className="w-full flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
-              <label htmlFor="contents" className="mb-2 font-bold">
-                Border Color
-              </label>
-              <Select
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center md:justify-between">
+              <div className="flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
+                <label htmlFor="contents" className="mb-2 font-bold">
+                  Background Color
+                </label>
+                <ColorPicker handleColorChange={handleBackgroundColor} />
+              </div>
+              <div className="flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
+                <label htmlFor="contents" className="mb-2 font-bold">
+                  Wheel Spinner Color
+                </label>
+                <ColorPicker handleColorChange={handleSpinnerColor} />
+              </div>
+              <div className="flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
+                <label htmlFor="contents" className="mb-2 font-bold">
+                  Border Color
+                </label>
+                <ColorPicker handleColorChange={handleBorderColor} />
+
+                {/* <Select
                 classNames={{
                   control: () => "border border-none shadow-none rounded-md ",
                 }}
@@ -214,7 +219,8 @@ const SpinTheWheelSettings = () => {
                 options={query}
                 placeholder="Search..."
                 onChange={handleBorderColor}
-              />
+              /> */}
+              </div>
             </div>
             <div className="w-full flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
               <label htmlFor="contents" className="mb-2 font-bold">
@@ -223,6 +229,7 @@ const SpinTheWheelSettings = () => {
               <input
                 type="number"
                 id="numberInput"
+                placeholder="0"
                 className="py-2 px-2 border-none outline-none"
                 value={numberofspins}
                 onChange={handleNumberOfSpins}

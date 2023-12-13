@@ -6,10 +6,9 @@ import MobileNavbar from "./nav/MobileNavbar";
 const WithNavbar = () => {
   return (
     <>
-      <div className="flex flex-col min-h-screen bg-slate-100">
+      <div className="flex flex-col min-h-screen md:bg-slate-100">
         <Navbar />
         <MobileNavbar />
-
         <main className="flex-grow">
           <Outlet />
         </main>
