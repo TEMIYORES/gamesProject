@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Container from "../Container";
-import reactlogo from "./react.svg";
 const Navbar = () => {
   return (
     <div className="w-full bg-white z-30 shadow-sm">
@@ -10,7 +9,6 @@ const Navbar = () => {
             <div className="lg:w-[23%] xl:w-[20%] flex gap-5 items-baseline">
               <Link to="/" className={`font-bold text-xl`}>
                 Games logo
-                {reactlogo}
               </Link>
 
               <div className=" md:block font-bold pb-3 relative">
