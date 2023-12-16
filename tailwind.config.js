@@ -13,5 +13,6 @@ export default {
     disabled: "#9c9c9c",
     foreground: "#2d264b",
   },
+  safelist: ["bg-[#ff8967]"],
   plugins: [],
 };

@@ -21,7 +21,9 @@ import SpinTheWheelSettings from "./screens/spinTheWheel/SpinTheWheelSettings.ts
 import { Provider } from "react-redux";
 import store from "./store.tsx";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SpinTheWheel from "./screens/spinTheWheel/SpinTheWheel.tsx";
+import ProbabilityList from "./components/Test.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +36,7 @@ const router = createBrowserRouter(
           element={<SpinTheWheelSettings />}
         />
         <Route path="campaigns/spin-the-wheel" element={<SpinTheWheel />} />
+        <Route path="test" element={<ProbabilityList />} />
         <Route path="campaigns/scratch-card" element={<ScratchCard />} />
         <Route path="campaigns/quiz" element={<Quiz />} />
         <Route path="campaigns/code-give-away" element={<CodeGiveAway />} />

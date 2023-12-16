@@ -3,8 +3,12 @@ import { ChromePicker, ColorResult } from "react-color";
 
 interface colorPickerType {
   handleColorChange: (color: string) => void;
+  selectedColor: string;
 }
-const ColorPicker: React.FC<colorPickerType> = ({ handleColorChange }) => {
+const ColorPicker: React.FC<colorPickerType> = ({
+  handleColorChange,
+  selectedColor,
+}) => {
   const [color, setColor] = useState<string>("#ffffff"); // Initial color
 
   const handleChange = (selectedColor: ColorResult) => {
@@ -14,7 +18,7 @@ const ColorPicker: React.FC<colorPickerType> = ({ handleColorChange }) => {
 
   return (
     <div>
-      <ChromePicker color={color} onChange={handleChange} />
+      <ChromePicker color={selectedColor || color} onChange={handleChange} />
     </div>
   );
 };

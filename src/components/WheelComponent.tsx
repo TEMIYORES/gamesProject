@@ -30,6 +30,7 @@ const WheelComponent = ({
   const [backgroundColor, setBackgroundColor] = useState(
     spinTheWheelsettings?.backgroundColor
   );
+  const spinnerColor = useState("#0000FF");
   useEffect(() => {
     setBackgroundColor(spinTheWheelsettings?.backgroundColor);
   }, []);
@@ -211,7 +212,9 @@ const WheelComponent = ({
     ctx.beginPath();
     ctx.arc(centerX, centerY, 50, 0, PI2, false);
     ctx.closePath();
-    ctx.fillStyle = primaryColor;
+    if (ctx) {
+      ctx.fillStyle = spinnerColor;
+    }
     ctx.lineWidth = 10;
     ctx.strokeStyle = contrastColor;
     ctx.fill();
@@ -270,11 +273,15 @@ const WheelComponent = ({
   }, [spinsLeft]);
 
   return (
-    <div id="wheel" className="flex flex-col justify-center items-center pt-20">
+    <div
+      id="wheel"
+      className="flex flex-col justify-center items-center pt-20"
+      style={{ backgroundColor: `${backgroundColor}` }}
+    >
       <span className="text-base font-bold">Number of spins: {spinsLeft}</span>
       <div className="relative">
         <canvas
-          className={`mx-auto flex justify-center items-center bg-[${backgroundColor}]`}
+          className={`mx-auto flex justify-center items-center`}
           id="canvas"
           width="600"
           height="600"
