@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 export interface initialType {
+  id: string;
   segments: string[];
   segColors: string[];
   backgroundColor: string;
@@ -14,9 +15,10 @@ export interface initialType {
   }[];
 }
 const initialState: initialType = {
+  id: "",
   backgroundColor: "",
   numberOfSpins: 0,
-  primaryColor: "#008000",
+  primaryColor: "",
   probability: [],
   segColors: [],
   segments: [],

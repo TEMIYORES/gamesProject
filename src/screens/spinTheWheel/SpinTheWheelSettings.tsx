@@ -10,8 +10,10 @@ import ClickEffectButton from "../../components/ClickEffectButton";
 import ColorPicker from "../../components/ColorPicker";
 import { toast } from "react-toastify";
 import { getRawFormData, updateRawFormData } from "../../slices/rawFormData";
+import { v4 as uuid } from "uuid";
 
 export interface initialType {
+  id: string;
   segments: string;
   segColors: {
     label: string;
@@ -73,8 +75,9 @@ const SpinTheWheelSettings = () => {
       const segColors: string[] = rawFormData.segColors.map(
         (content) => content.value
       );
-
+      const id = uuid();
       const formData = {
+        id,
         segments,
         segColors: segColors,
         backgroundColor: rawFormData.backgroundColor,
@@ -84,7 +87,7 @@ const SpinTheWheelSettings = () => {
         probability: rawFormData.probability,
       };
       setisFormValid(true);
-      dispatch(updateRawFormData(rawFormData));
+      dispatch(updateRawFormData({ ...rawFormData, id }));
       dispatch(setSpinTheWheelSettings(formData));
       console.log({ formData });
     } catch (err) {
