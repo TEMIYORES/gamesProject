@@ -9,6 +9,21 @@ interface Item {
   label: string;
   percentage: number;
 }
+interface WheelComponentType {
+  id: string;
+  segments: string[];
+  segColors: string[];
+  winningSegment?: string | null | undefined;
+  onFinished: (value: string) => void;
+  primaryColor?: string;
+  contrastColor?: string;
+  buttonText?: string;
+  isOnlyOnce?: boolean;
+  size?: number;
+  upDuration?: number;
+  downDuration?: number;
+  fontFamily?: string;
+}
 const WheelComponent = ({
   segments,
   segColors,
@@ -22,10 +37,13 @@ const WheelComponent = ({
   upDuration = 100,
   downDuration = 1000,
   fontFamily = "proxima-nova",
-}: any) => {
+}: WheelComponentType) => {
   const dispatch = useDispatch();
   const spinTheWheelsettings: initialType | null = useSelector(
     getSpinTheWheelSettings
+  );
+  const [containerTopOffset, setcontainerTopOffset] = useState<string>(
+    "calc(100vh - 100px)"
   );
 
   const [spinsLeft, setSpinsLeft] = useState(
@@ -38,7 +56,7 @@ const WheelComponent = ({
   const timerDelay = segments.length;
   let angleCurrent = 0;
   let angleDelta = 0;
-  let canvasContext: any = null;
+  let canvasContext: CanvasRenderingContext2D | null = null;
   let maxSpeed = Math.PI / segments.length;
   const upTime = segments.length * upDuration;
   const downTime = segments.length * downDuration;
@@ -51,6 +69,8 @@ const WheelComponent = ({
     setTimeout(() => {
       window.scrollTo(0, 1);
     }, 0);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getRandomItem = (items: Item[]): Item | undefined => {
@@ -164,25 +184,25 @@ const WheelComponent = ({
     drawNeedle();
   };
 
-  const drawSegment = (key: any, lastAngle: any, angle: any) => {
+  const drawSegment = (key: number, lastAngle: number, angle: number) => {
     const ctx = canvasContext;
     const value = segments[key];
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, size, lastAngle, angle, false);
-    ctx.lineTo(centerX, centerY);
-    ctx.closePath();
-    ctx.fillStyle = segColors[key];
-    ctx.fill();
-    ctx.stroke();
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate((lastAngle + angle) / 2);
-    ctx.fillStyle = contrastColor;
-    ctx.font = "bold 1em " + fontFamily;
-    ctx.fillText(value.substr(0, 21), size / 2 + 20, 0);
-    ctx.restore();
+    ctx!.save();
+    ctx!.beginPath();
+    ctx!.moveTo(centerX, centerY);
+    ctx!.arc(centerX, centerY, size, lastAngle, angle, false);
+    ctx!.lineTo(centerX, centerY);
+    ctx!.closePath();
+    ctx!.fillStyle = segColors[key];
+    ctx!.fill();
+    ctx!.stroke();
+    ctx!.save();
+    ctx!.translate(centerX, centerY);
+    ctx!.rotate((lastAngle + angle) / 2);
+    ctx!.fillStyle = contrastColor;
+    ctx!.font = "bold 1em " + fontFamily;
+    ctx!.fillText(value.substr(0, 21), size / 2 + 20, 0);
+    ctx!.restore();
   };
 
   const drawWheel = () => {
@@ -190,11 +210,11 @@ const WheelComponent = ({
     let lastAngle = angleCurrent;
     const len = segments.length;
     const PI2 = Math.PI * 2;
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = primaryColor;
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.font = "1em " + fontFamily;
+    ctx!.lineWidth = 1;
+    ctx!.strokeStyle = primaryColor;
+    ctx!.textBaseline = "middle";
+    ctx!.textAlign = "center";
+    ctx!.font = "1em " + fontFamily;
     for (let i = 1; i <= len; i++) {
       const angle = PI2 * (i / len) + angleCurrent;
       drawSegment(i - 1, lastAngle, angle);
@@ -202,59 +222,59 @@ const WheelComponent = ({
     }
 
     // Draw a center circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 50, 0, PI2, false);
-    ctx.closePath();
-    if (ctx) {
-      ctx.fillStyle = "#000000";
+    ctx!.beginPath();
+    ctx!.arc(centerX, centerY, 50, 0, PI2, false);
+    ctx!.closePath();
+    if (ctx!) {
+      ctx!.fillStyle = "#000000";
     }
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = contrastColor;
-    ctx.fill();
-    ctx.font = "bold 1em " + fontFamily;
-    ctx.fillStyle = contrastColor;
-    ctx.textAlign = "center";
-    ctx.fillText(buttonText, centerX, centerY + 3);
-    ctx.stroke();
+    ctx!.lineWidth = 10;
+    ctx!.strokeStyle = contrastColor;
+    ctx!.fill();
+    ctx!.font = "bold 1em " + fontFamily;
+    ctx!.fillStyle = contrastColor;
+    ctx!.textAlign = "center";
+    ctx!.fillText(buttonText, centerX, centerY + 3);
+    ctx!.stroke();
 
     // Draw outer circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, size, 0, PI2, false);
-    ctx.closePath();
+    ctx!.beginPath();
+    ctx!.arc(centerX, centerY, size, 0, PI2, false);
+    ctx!.closePath();
 
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = primaryColor;
-    ctx.stroke();
+    ctx!.lineWidth = 10;
+    ctx!.strokeStyle = primaryColor;
+    ctx!.stroke();
   };
 
   const drawNeedle = () => {
     const ctx = canvasContext;
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = contrastColor;
-    ctx.fileStyle = contrastColor;
-    ctx.beginPath();
-    ctx.moveTo(centerX + 20, centerY - 50);
-    ctx.lineTo(centerX - 20, centerY - 50);
-    ctx.lineTo(centerX, centerY - 70);
-    ctx.closePath();
-    ctx.fill();
+    ctx!.lineWidth = 1;
+    ctx!.strokeStyle = contrastColor;
+    ctx!.fillStyle = contrastColor;
+    ctx!.beginPath();
+    ctx!.moveTo(centerX + 20, centerY - 50);
+    ctx!.lineTo(centerX - 20, centerY - 50);
+    ctx!.lineTo(centerX, centerY - 70);
+    ctx!.closePath();
+    ctx!.fill();
     const change = angleCurrent + Math.PI / 2;
     let i =
       segments.length -
       Math.floor((change / (Math.PI * 2)) * segments.length) -
       1;
     if (i < 0) i = i + segments.length;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = primaryColor;
-    ctx.font = "bold 1.5em " + fontFamily;
+    ctx!.textAlign = "center";
+    ctx!.textBaseline = "middle";
+    ctx!.fillStyle = primaryColor;
+    ctx!.font = "bold 1.5em " + fontFamily;
     currentSegment = segments[i];
     isStarted &&
-      ctx.fillText(currentSegment, centerX + 10, centerY + size + 50);
+      ctx!.fillText(currentSegment, centerX + 10, centerY + size + 50);
   };
   const clear = () => {
     const ctx = canvasContext;
-    ctx.clearRect(0, 0, 1000, 800);
+    ctx!.clearRect(0, 0, 1000, 800);
   };
   useEffect(() => {
     if (isFinished && (spinsLeft as number) <= 0) {
@@ -263,13 +283,24 @@ const WheelComponent = ({
         dispatch(updateSpinsLeft(0));
       }, 3000);
     }
-  }, [spinsLeft]);
+  }, [dispatch, isFinished, spinsLeft]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const container = document.getElementById("quiz-container");
+    if (container) {
+      const resultHeight = window.innerHeight - container.offsetTop;
+      setcontainerTopOffset(`calc(${resultHeight}px)`);
+    }
+  });
   return (
     <div
       id="wheel"
       className="flex flex-col justify-center items-center pt-20"
-      style={{ backgroundColor: `${spinTheWheelsettings?.backgroundColor}` }}
+      style={{
+        backgroundColor: `${spinTheWheelsettings?.backgroundColor}`,
+        height: containerTopOffset,
+      }}
     >
       <span className="text-base font-bold">Number of spins: {spinsLeft}</span>
       <div className="relative">

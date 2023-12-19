@@ -22,7 +22,7 @@ const Sidebar = () => {
     },
     {
       title: "Scratch Card",
-      path: "/campaigns/scratch-card",
+      path: "/campaigns/scratch-card/settings",
       icon: (
         <TransactionMinus
           size="30"
@@ -34,7 +34,7 @@ const Sidebar = () => {
     },
     {
       title: "Quiz",
-      path: "/campaigns/quiz",
+      path: "/campaigns/quiz/settings",
       icon: (
         <MessageNotif
           size="30"
@@ -44,7 +44,7 @@ const Sidebar = () => {
     },
     {
       title: "Code give away",
-      path: "/campaigns/code-give-away",
+      path: "/campaigns/code-give-away/settings",
       icon: (
         <User
           size="30"

@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 
 function App() {
+
   return (
     <>
       <main className="text-sm">

@@ -1,59 +1,39 @@
-import React, { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
-interface ProbabilityItem {
-  label: string;
-  percentage: number;
-}
+const QuestionEntry = () => {
+  const [questions, setQuestions] = useState([""]);
 
-const initialProbability: ProbabilityItem[] = [
-  { label: "item 1", percentage: 100 },
-  { label: "item 2", percentage: 100 },
-  { label: "item 3", percentage: 100 },
-  { label: "item 4", percentage: 100 },
-  // Add more items here if needed
-];
-
-const ProbabilityList: React.FC = () => {
-  const [probability, setProbability] =
-    useState<ProbabilityItem[]>(initialProbability);
-
-  const handlePercentageChange = (index: number, value: number) => {
-    const updatedProbability = [...probability];
-    updatedProbability[index].percentage = value;
-    setProbability(updatedProbability);
+  const handleAddQuestion = () => {
+    setQuestions([...questions, ""]);
   };
 
-  const handleInputBlur = () => {
-    // Ensure at least one input is not zero
-    const allZero = probability.every((item) => item.percentage === 0);
-    if (allZero) {
-      // Find the first input and set it to 1 if all inputs are zero
-      const updatedProbability = [...probability];
-      updatedProbability[0].percentage = 1;
-      setProbability(updatedProbability);
-
-    }
+  const handleQuestionChange = (
+    index: number,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index] = event.target.value;
+    setQuestions(updatedQuestions);
   };
 
   return (
     <div>
-      {probability.map((item, index) => (
+      <h2>Question Entry</h2>
+      {questions.map((question, index) => (
         <div key={index}>
-          <label>{item.label}</label>
-          <input
-            type="number"
-            value={item.percentage}
-            onChange={(e) =>
-              handlePercentageChange(index, parseInt(e.target.value))
-            }
-            onBlur={handleInputBlur}
-            min={0}
-            max={100}
-          />
+          <label>
+            Question {index + 1}:
+            <input
+              type="text"
+              value={question}
+              onChange={(event) => handleQuestionChange(index, event)}
+            />
+          </label>
         </div>
       ))}
+      <button onClick={handleAddQuestion}>Add Question</button>
     </div>
   );
 };
 
-export default ProbabilityList;
+export default QuestionEntry;

@@ -5,7 +5,6 @@ import {
   initialType,
 } from "../../slices/spinthewheelSettings";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { ArrowLeft2, TickCircle } from "iconsax-react";
 import { toast } from "react-toastify";
 
@@ -31,9 +30,7 @@ const SpinTheWheel = () => {
   const spinTheWheelsettings: initialType | null = useSelector(
     getSpinTheWheelSettings
   );
-  const [backgroundColor, _setBackgroundColor] = useState(
-    spinTheWheelsettings?.backgroundColor
-  );
+
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1); // This navigates back to the previous page
@@ -107,12 +104,13 @@ const SpinTheWheel = () => {
           upDuration={500}
           downDuration={600}
           fontFamily="Arial"
+          id={""}
         />
       </div>
     );
   };
   return (
-    <div className={`bg-[${backgroundColor}] overflow-y-hidden`}>
+    <div className={`overflow-y-hidden`}>
       {spinTheWheelsettings.segments.length ? (
         <RenderComponent />
       ) : (

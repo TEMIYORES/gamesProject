@@ -1,4 +1,3 @@
-import React from "react";
 import App from "./App.tsx";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -23,7 +22,8 @@ import store from "./store.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SpinTheWheel from "./screens/spinTheWheel/SpinTheWheel.tsx";
-import ProbabilityList from "./components/Test.tsx";
+import QuestionEntry from "./components/Test.tsx";
+import QuizGame from "./screens/quiz/QuizGame.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,9 +36,10 @@ const router = createBrowserRouter(
           element={<SpinTheWheelSettings />}
         />
         <Route path="campaigns/spin-the-wheel" element={<SpinTheWheel />} />
-        <Route path="test" element={<ProbabilityList />} />
+        <Route path="test" element={<QuestionEntry />} />
         <Route path="campaigns/scratch-card" element={<ScratchCard />} />
-        <Route path="campaigns/quiz" element={<Quiz />} />
+        <Route path="campaigns/quiz/settings" element={<Quiz />} />
+        <Route path="campaigns/quiz" element={<QuizGame />} />
         <Route path="campaigns/code-give-away" element={<CodeGiveAway />} />
         <Route path="campaigns/puzzle" element={<Puzzle />} />
         <Route
@@ -60,12 +61,8 @@ const router = createBrowserRouter(
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <React.StrictMode>
-      <Provider store={store}>
-        <ToastContainer />
-        <RouterProvider router={router} />
-      </Provider>
-    </React.StrictMode>
-  </React.StrictMode>
+  <Provider store={store}>
+    <ToastContainer />
+    <RouterProvider router={router} />
+  </Provider>
 );

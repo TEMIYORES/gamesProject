@@ -28,20 +28,20 @@ const initialState: initialType = {
   spinnerColor: "",
 };
 
-const rawFormData = createSlice({
-  name: "rawFormData",
+const spinRawFormData = createSlice({
+  name: "spinRawFormData",
   initialState,
   reducers: {
-    updateRawFormData: (_state, action) => {
+    updateSpinRawFormData: (_state, action) => {
       return action.payload;
     },
   },
 });
 
-export const getRawFormData: (state: RootState) => initialType = (
+export const getSpinRawFormData: (state: RootState) => initialType = (
   state: RootState
 ) => {
-  return state.rawFormData;
+  return state.spinRawFormData;
 };
-export const { updateRawFormData } = rawFormData.actions;
-export default rawFormData.reducer;
+export const { updateSpinRawFormData } = spinRawFormData.actions;
+export default spinRawFormData.reducer;

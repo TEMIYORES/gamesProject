@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import { useForm } from "react-hook-form";
-import Select from "react-select";
+import Select, { MultiValue } from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { setSpinTheWheelSettings } from "../../slices/spinthewheelSettings";
 import { Link } from "react-router-dom";
@@ -9,7 +9,10 @@ import { ArrowRight } from "iconsax-react";
 import ClickEffectButton from "../../components/ClickEffectButton";
 import ColorPicker from "../../components/ColorPicker";
 import { toast } from "react-toastify";
-import { getRawFormData, updateRawFormData } from "../../slices/rawFormData";
+import {
+  getSpinRawFormData,
+  updateSpinRawFormData,
+} from "../../slices/spinRawFormData";
 import { v4 as uuid } from "uuid";
 
 export interface initialType {
@@ -31,22 +34,21 @@ export interface initialType {
 const SpinTheWheelSettings = () => {
   const [contentsErr, setContentsErr] = useState<string | undefined>(undefined);
   const [isFormValid, setisFormValid] = useState<boolean>(false);
-  const rawformdata = useSelector(getRawFormData);
-  const [rawFormData, setRawFormData] = useState<initialType>(rawformdata);
+  const spinformdata = useSelector(getSpinRawFormData);
+  const [spinRawFormData, setSpinRawFormData] =
+    useState<initialType>(spinformdata);
 
-  console.log("redux data", rawformdata);
-  console.log("state data", rawFormData);
-  const handleNumberOfSpins = (e: any) => {
+  const handleNumberOfSpins = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseInt(e.target.value, 10);
     // Allow positive numbers only
 
     if (isNaN(inputValue) || inputValue >= 0) {
-      const updateRawData = { ...rawFormData };
+      const updateRawData = { ...spinRawFormData };
       updateRawData.numberOfSpins = inputValue;
-      setRawFormData(updateRawData);
+      setSpinRawFormData(updateRawData);
       if (isNaN(inputValue)) {
         updateRawData.numberOfSpins = 1;
-        setRawFormData(updateRawData);
+        setSpinRawFormData(updateRawData);
       }
     }
   };
@@ -59,20 +61,20 @@ const SpinTheWheelSettings = () => {
 
   const { handleSubmit, formState } = form;
   const { errors } = formState;
-  let errContents = errors?.contents?.message;
+  const errContents = errors?.contents?.message;
   useEffect(() => {
     setContentsErr(errContents);
   }, [errContents]);
   const onSubmit = async () => {
     setContentsErr(undefined);
     try {
-      const segments: string[] = rawFormData.segments
+      const segments: string[] = spinRawFormData.segments
         .split(",")
         .map((content: string) => content.trim());
       if (segments.length < 2) {
         setContentsErr("Contents must be atleast 2");
       }
-      const segColors: string[] = rawFormData.segColors.map(
+      const segColors: string[] = spinRawFormData.segColors.map(
         (content) => content.value
       );
       const id = uuid();
@@ -80,14 +82,14 @@ const SpinTheWheelSettings = () => {
         id,
         segments,
         segColors: segColors,
-        backgroundColor: rawFormData.backgroundColor,
-        spinnerColor: rawFormData.spinnerColor,
-        primaryColor: rawFormData.primaryColor,
-        numberOfSpins: rawFormData.numberOfSpins,
-        probability: rawFormData.probability,
+        backgroundColor: spinRawFormData.backgroundColor,
+        spinnerColor: spinRawFormData.spinnerColor,
+        primaryColor: spinRawFormData.primaryColor,
+        numberOfSpins: spinRawFormData.numberOfSpins,
+        probability: spinRawFormData.probability,
       };
       setisFormValid(true);
-      dispatch(updateRawFormData({ ...rawFormData, id }));
+      dispatch(updateSpinRawFormData({ ...spinRawFormData, id }));
       dispatch(setSpinTheWheelSettings(formData));
       console.log({ formData });
     } catch (err) {
@@ -122,88 +124,94 @@ const SpinTheWheelSettings = () => {
     label: string;
   }
   const query: Option[] = colors;
-  const handleSearchInputChange = (query: any) => {
-    if (query.length <= rawFormData.probability.length) {
+  const handleSearchInputChange = (
+    query: MultiValue<{ label: string; value: string }>
+  ) => {
+    if (query.length <= spinRawFormData.probability.length) {
       if (query) {
-        const updateRawData = { ...rawFormData };
+        const updateRawData = { ...spinRawFormData };
         updateRawData.segColors = [...query];
-        setRawFormData(updateRawData);
+        setSpinRawFormData(updateRawData);
         handleRawUpdateColors([...query]);
       } else {
-        const updateRawData = { ...rawFormData };
+        const updateRawData = { ...spinRawFormData };
         updateRawData.segColors = [];
-        setRawFormData(updateRawData);
+        setSpinRawFormData(updateRawData);
       }
     }
   };
   const isOptionDisabled = (option: Option): boolean => {
     return (
-      rawFormData.segColors.length >= rawFormData.probability.length &&
-      !rawFormData.segColors.find((item: any) => item.value === option.value)
+      spinRawFormData.segColors.length >= spinRawFormData.probability.length &&
+      !spinRawFormData.segColors.find(
+        (item: Option) => item.value === option.value
+      )
     );
   };
 
-  const handleBorderColor = (data: any) => {
-    const updateRawData = { ...rawFormData };
+  const handleBorderColor = (data: string) => {
+    const updateRawData = { ...spinRawFormData };
     updateRawData.primaryColor = data;
-    setRawFormData(updateRawData);
+    setSpinRawFormData(updateRawData);
   };
-  const handleBackgroundColor = (data: any) => {
-    const updateRawData = { ...rawFormData };
+  const handleBackgroundColor = (data: string) => {
+    const updateRawData = { ...spinRawFormData };
     updateRawData.backgroundColor = data;
-    setRawFormData(updateRawData);
+    setSpinRawFormData(updateRawData);
   };
-  const handleSpinnerColor = (data: any) => {
-    const updateRawData = { ...rawFormData };
+  const handleSpinnerColor = (data: string) => {
+    const updateRawData = { ...spinRawFormData };
     updateRawData.spinnerColor = data;
-    setRawFormData(updateRawData);
+    setSpinRawFormData(updateRawData);
   };
-  const handleBlur = (event: any) => {
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     const contents = event.target.value.split(",").map((item: string) => ({
       label: item.trim(),
       percentage: 100,
     }));
-    const updateRawData = { ...rawFormData };
+    const updateRawData = { ...spinRawFormData };
     updateRawData.probability = contents;
-    setRawFormData(updateRawData);
+    setSpinRawFormData(updateRawData);
   };
   const handlePercentageChange = (index: number, value: string) => {
-    const updateRawData = { ...rawFormData };
-    const updatedContents = [...rawFormData.probability];
+    const updateRawData = { ...spinRawFormData };
+    const updatedContents = [...spinRawFormData.probability];
     console.log(updatedContents);
     updatedContents[index] = {
       ...updatedContents[index],
       percentage: parseInt(value, 10) || 0,
     };
     updateRawData.probability = updatedContents;
-    setRawFormData(updateRawData);
+    setSpinRawFormData(updateRawData);
   };
   const handleInputBlur = () => {
     // Ensure at least one input is not zero
-    const allZero = rawFormData.probability.every(
+    const allZero = spinRawFormData.probability.every(
       (item) => item.percentage === 0
     );
     if (allZero) {
-      const updateRawData = { ...rawFormData };
+      const updateRawData = { ...spinRawFormData };
       // Find the first input and set it to 1 if all inputs are zero
-      const updatedProbability = [...rawFormData.probability];
+      const updatedProbability = [...spinRawFormData.probability];
       updatedProbability[0] = { ...updatedProbability[0], percentage: 1 };
       updateRawData.probability = updatedProbability;
-      setRawFormData(updateRawData);
+      setSpinRawFormData(updateRawData);
       toast.warn("Atleast one content probability must be 1");
     }
   };
 
-  const handleRawUpdateSegment = (event: any) => {
-    const updateRawData = { ...rawFormData };
+  const handleRawUpdateSegment = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updateRawData = { ...spinRawFormData };
     updateRawData.segments = event.target.value;
-    setRawFormData(updateRawData);
+    setSpinRawFormData(updateRawData);
   };
-  const handleRawUpdateColors = (colors: any[]) => {
-    const updateRawData = { ...rawFormData };
+  const handleRawUpdateColors = (colors: Option[]) => {
+    const updateRawData = { ...spinRawFormData };
     updateRawData.segColors = [...colors];
-    setRawFormData(updateRawData);
-    console.log({ rawFormData });
+    setSpinRawFormData(updateRawData);
+    console.log({ spinRawFormData });
   };
   return (
     <div className="flex">
@@ -227,7 +235,7 @@ const SpinTheWheelSettings = () => {
                 className="py-2 px-2 border border-slate-400 outline-none"
                 onBlur={handleBlur}
                 onChange={handleRawUpdateSegment}
-                value={rawFormData.segments}
+                value={spinRawFormData.segments}
               />
               <small
                 className={`${
@@ -249,7 +257,7 @@ const SpinTheWheelSettings = () => {
                 className="w-full outline-none shadow-none border-none"
                 isMulti
                 options={query}
-                value={rawFormData.segColors}
+                value={spinRawFormData.segColors}
                 isOptionDisabled={isOptionDisabled}
                 placeholder="Search..."
                 onChange={handleSearchInputChange}
@@ -261,7 +269,7 @@ const SpinTheWheelSettings = () => {
                   Background Color
                 </label>
                 <ColorPicker
-                  selectedColor={rawFormData.backgroundColor}
+                  selectedColor={spinRawFormData.backgroundColor}
                   handleColorChange={handleBackgroundColor}
                 />
               </div>
@@ -270,7 +278,7 @@ const SpinTheWheelSettings = () => {
                   Wheel Spinner Color
                 </label>
                 <ColorPicker
-                  selectedColor={rawFormData.spinnerColor}
+                  selectedColor={spinRawFormData.spinnerColor}
                   handleColorChange={handleSpinnerColor}
                 />
               </div>
@@ -279,7 +287,7 @@ const SpinTheWheelSettings = () => {
                   Border Color
                 </label>
                 <ColorPicker
-                  selectedColor={rawFormData.primaryColor}
+                  selectedColor={spinRawFormData.primaryColor}
                   handleColorChange={handleBorderColor}
                 />
               </div>
@@ -293,7 +301,7 @@ const SpinTheWheelSettings = () => {
                 id="numberInput"
                 min={1}
                 className="py-2 px-2 border-none outline-none"
-                value={rawFormData.numberOfSpins}
+                value={spinRawFormData.numberOfSpins}
                 onChange={handleNumberOfSpins}
               />
             </div>
@@ -302,7 +310,7 @@ const SpinTheWheelSettings = () => {
                 Set probability
               </label>
               <div className="w-full flex flex-col gap-y-3">
-                {rawFormData.probability.map((content, index) => (
+                {spinRawFormData.probability.map((content, index) => (
                   <div key={index} className="w-full flex gap-x-5">
                     <input
                       value={content.label}
