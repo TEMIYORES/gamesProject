@@ -11,19 +11,21 @@ import {
 import WithoutNavbar from "./components/WithoutNavbar";
 import PrivateRoute from "./components/PrivateRoute";
 import WithNavbar from "./components/WithNavbar";
-import ScratchCard from "./screens/scratchCard/ScratchCard.tsx";
+import ScratchCard from "./screens/scratchCard/ScratchCardSetting.tsx";
 import Quiz from "./screens/quiz/Quiz.tsx";
 import CodeGiveAway from "./screens/codeGiveAway/CodeGiveAway.tsx";
 import Puzzle from "./screens/puzzle/Puzzle.tsx";
 import ReferralCampaign from "./screens/referralCampaign/ReferralCampaign.tsx";
-import SpinTheWheelSettings from "./screens/spinTheWheel/SpinTheWheelSettings.tsx";
+import SpinTheWheelSettings from "./screens/spinTheWheel/SpinTheWheelSetting.tsx";
 import { Provider } from "react-redux";
 import store from "./store.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SpinTheWheel from "./screens/spinTheWheel/SpinTheWheel.tsx";
-import QuestionEntry from "./components/Test.tsx";
 import QuizGame from "./screens/quiz/QuizGame.tsx";
+import Entry from "./screens/entry/Entry.tsx";
+import Game from "./screens/game/Game.tsx";
+import SoundSelector from "./components/Test.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,7 +38,9 @@ const router = createBrowserRouter(
           element={<SpinTheWheelSettings />}
         />
         <Route path="campaigns/spin-the-wheel" element={<SpinTheWheel />} />
-        <Route path="test" element={<QuestionEntry />} />
+        <Route path="test" element={<SoundSelector />} />
+        <Route path="game" element={<Game />} />
+        <Route path="entry" element={<Entry />} />
         <Route path="campaigns/scratch-card" element={<ScratchCard />} />
         <Route path="campaigns/quiz/settings" element={<Quiz />} />
         <Route path="campaigns/quiz" element={<QuizGame />} />

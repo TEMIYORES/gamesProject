@@ -7,7 +7,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 interface Item {
   label: string;
-  percentage: number;
+  probability: number;
+  coupon_code: string;
+  isWin: string;
+  color: string;
 }
 interface WheelComponentType {
   id: string;
@@ -76,14 +79,14 @@ const WheelComponent = ({
   const getRandomItem = (items: Item[]): Item | undefined => {
     let total = 0;
     items.forEach((item) => {
-      total += item.percentage;
+      total += item.probability;
     });
     let random = Math.floor(Math.random() * total);
     for (const item of items) {
-      if (random < item.percentage) {
+      if (random < item.probability) {
         return item;
       }
-      random -= item.percentage;
+      random -= item.probability;
     }
   };
   const generateBiasedOutput: () => string | null | undefined = () => {

@@ -13,15 +13,26 @@ interface datatype {
   createDate: Date;
   segments: string[];
   segColors: string[];
-  backgroundColor: string;
-  spinnerColor: string;
+  backgroundColor: {
+    imgName: string;
+    imgUrl: string;
+    color: string;
+  };
+  spinnerColor: {
+    imgName: string;
+    imgUrl: string;
+    color: string;
+  };
   primaryColor: string;
   numberOfSpins: number;
   probability: {
     label: string;
-    percentage: number;
+    probability: number;
+    coupon_code: string;
+    isWin: string;
+    color: string;
   }[];
-  type: "Spin the wheel";
+  type: string;
 }
 const SpinTheWheel = () => {
   const onFinished = (winner: string) => {

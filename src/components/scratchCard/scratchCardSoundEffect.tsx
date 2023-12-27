@@ -1,13 +1,15 @@
 import React, { useState, useRef } from "react";
-import sound1 from "../assets/sounds/sound1.mp3";
-import sound2 from "../assets/sounds/sound2.mp3";
-interface Sound {
-  id: number;
-  name: string;
-  url: string;
-}
+import sound1 from "../../assets/sounds/sound1.mp3";
+import sound2 from "../../assets/sounds/sound2.mp3";
+import { PauseCircle, PlayCircle } from "iconsax-react";
+import { Sound } from "../../slices/scratchCard";
 
-const SoundSelector: React.FC = () => {
+interface ScratchCardSoundEffectType {
+  handleSoundData: (Sound: Sound | null) => void;
+}
+const ScratchCardSoundEffect: React.FC<ScratchCardSoundEffectType> = ({
+  handleSoundData,
+}) => {
   const [selectedSound, setSelectedSound] = useState<Sound | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -22,6 +24,7 @@ const SoundSelector: React.FC = () => {
     const selectedSoundId = parseInt(event.target.value);
     const sound = sounds.find((s) => s.id === selectedSoundId) || null;
     setSelectedSound(sound);
+    handleSoundData(sound);
   };
 
   const playSound = () => {
@@ -38,21 +41,26 @@ const SoundSelector: React.FC = () => {
   };
 
   return (
-    <div>
-      <select onChange={handleSoundChange}>
+    <div className="flex place-items-center gap-3">
+      <select
+        onChange={handleSoundChange}
+        className="w-24 outline-none border border-slate-700 rounded-full bg-[#F1F5F9] px-1"
+      >
         <option value="">Select a sound</option>
         {sounds.map((sound) => (
-          <option key={sound.id} value={sound.id}>
+          <option key={sound.id} value={sound.id!}>
             {sound.name}
           </option>
         ))}
       </select>
-      <button onClick={playSound} disabled={!selectedSound}>
-        Play
-      </button>
-      <button onClick={stopSound} disabled={!selectedSound}>
-        Stop
-      </button>
+      <div className="flex place-items-center">
+        <button onClick={playSound} disabled={!selectedSound}>
+          <PlayCircle size="20" color="#c0a0ff" variant="Bold" />
+        </button>
+        <button onClick={stopSound} disabled={!selectedSound}>
+          <PauseCircle size="20" color="#c0a0ff" variant="Bold" />
+        </button>
+      </div>
       {selectedSound && (
         <audio ref={audioRef} src={selectedSound.url}>
           Your browser does not support the audio element.
@@ -62,4 +70,4 @@ const SoundSelector: React.FC = () => {
   );
 };
 
-export default SoundSelector;
+export default ScratchCardSoundEffect;

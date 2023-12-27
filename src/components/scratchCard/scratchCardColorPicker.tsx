@@ -2,47 +2,49 @@ import { ArrowDown2, ArrowUp2 } from "iconsax-react";
 import React, { useState } from "react";
 import { ChromePicker, ColorResult } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getSpinRawFormData,
-  updateSpinRawFormData,
-} from "../slices/spinRawFormData";
+import { getScratchCardData, setScratchCard } from "../../slices/scratchCard";
 
 interface ColorPickerProps {
   defaultColor: string;
   name: string;
-  handleColorWheel?: (color: string) => void;
+  handleColorWheel?: (color: string, index: number) => void;
 }
 
-const ColorPicker2: React.FC<ColorPickerProps> = ({
+const ScratchCardColorPicker: React.FC<ColorPickerProps> = ({
   defaultColor,
   name,
   handleColorWheel,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>(defaultColor);
-  const spinformdata = useSelector(getSpinRawFormData);
+  const scratchCardData = useSelector(getScratchCardData);
   const dispatch = useDispatch();
   const handleColorChange = (color: ColorResult) => {
     setSelectedColor(color.hex);
-    const updateSpinData = { ...spinformdata };
+    const updateScratchCardData = { ...scratchCardData };
 
-    if (name === "spinner") {
-      updateSpinData.spinnerColor = {
-        ...updateSpinData.spinnerColor,
-        color: color.hex,
-      };
-    }
     if (name === "background") {
-      updateSpinData.backgroundColor = {
-        ...updateSpinData.backgroundColor,
+      updateScratchCardData.background = {
+        ...updateScratchCardData.background,
         color: color.hex,
       };
     }
-    if (name === "border") {
-      updateSpinData.primaryColor = color.hex;
+    if (name === "mobile_background") {
+      updateScratchCardData.mobileBackground = {
+        ...updateScratchCardData.mobileBackground,
+        color: color.hex,
+      };
     }
-    dispatch(updateSpinRawFormData(updateSpinData));
-    if (handleColorWheel !== undefined) handleColorWheel(color.hex);
+    if (name === "mobile_background") {
+      updateScratchCardData.mobileBackground = {
+        ...updateScratchCardData.mobileBackground,
+        color: color.hex,
+      };
+    }
+
+    dispatch(setScratchCard(updateScratchCardData));
+    if (handleColorWheel !== undefined)
+      handleColorWheel(color.hex, parseInt(name));
   };
 
   const toggleColorPicker = () => {
@@ -85,4 +87,4 @@ const ColorPicker2: React.FC<ColorPickerProps> = ({
   );
 };
 
-export default ColorPicker2;
+export default ScratchCardColorPicker;

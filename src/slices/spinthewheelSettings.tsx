@@ -5,24 +5,44 @@ export interface initialType {
   id: string;
   segments: string[];
   segColors: string[];
-  backgroundColor: string;
-  spinnerColor: string;
+  backgroundColor: {
+    imgName: string;
+    imgUrl: string;
+    color: string;
+  };
+  spinnerColor: {
+    imgName: string;
+    imgUrl: string;
+    color: string;
+  };
   primaryColor: string;
   numberOfSpins: number;
   probability: {
     label: string;
-    percentage: number;
+    probability: number;
+    coupon_code: string;
+    isWin: string;
+    color: string;
   }[];
 }
+
 const initialState: initialType = {
   id: "",
-  backgroundColor: "",
+  backgroundColor: {
+    imgName: "",
+    imgUrl: "",
+    color: "",
+  },
   numberOfSpins: 0,
   primaryColor: "",
   probability: [],
   segColors: [],
   segments: [],
-  spinnerColor: "",
+  spinnerColor: {
+    imgName: "",
+    imgUrl: "",
+    color: "",
+  },
 };
 // {
 // backgroundColor: "#ff0000",
