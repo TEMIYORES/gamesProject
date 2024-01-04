@@ -24,3 +24,16 @@ body {
 .custom-scrollbar::-webkit-scrollbar {
   display: none; /* WebKit (Chrome, Safari, etc.) */
 }
+
+::-webkit-scrollbar {
+  width: 6px; /* Adjust width */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0; /* Adjust thumb color */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #edf2f7; /* Adjust track color */
+}

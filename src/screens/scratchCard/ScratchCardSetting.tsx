@@ -4,6 +4,7 @@ import {
   Sound,
   gameSettingType,
   getScratchCardData,
+  scratchCardType,
   setScratchCard,
 } from "../../slices/scratchCard";
 import ScratchCardImageUploader from "../../components/scratchCard/scratchCardImageUploader";
@@ -12,7 +13,7 @@ import { toast } from "react-toastify";
 import { ChangeEvent, useEffect } from "react";
 
 const ScratchCard = () => {
-  const scratchCardData = useSelector(getScratchCardData);
+  const scratchCardData: scratchCardType = useSelector(getScratchCardData);
   const dispatch = useDispatch();
   useEffect(() => {
     if (scratchCardData.numberOfScratchCard != null) {

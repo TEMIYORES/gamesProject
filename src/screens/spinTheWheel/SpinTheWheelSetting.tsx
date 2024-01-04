@@ -1,203 +1,162 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSpinTheWheelSettings } from "../../slices/spinthewheelSettings";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "iconsax-react";
-import ClickEffectButton from "../../components/ClickEffectButton";
-import { toast } from "react-toastify";
 import {
-  getSpinRawFormData,
-  updateSpinRawFormData,
-} from "../../slices/spinRawFormData";
-import { v4 as uuid } from "uuid";
-import CustomInput from "../../components/CustomInput";
-import ColorPicker2 from "../../components/ColorPicker";
-import ImageUploader from "../../components/ImageUploader";
-import CustomColor from "../../components/CustomColor";
+  getSpinTheWheelSetting,
+  setSpinTheWheelSetting,
+  spinTheWheelProbabilityType,
+  spinTheWheelType,
+} from "../../slices/spinthewheel";
+import { toast } from "react-toastify";
+// import { v4 as uuid } from "uuid";
+import SpinTheWheelCustomInput from "../../components/spinTheWheel/SpinTheWheelCustomInput";
+import SpinTheWheelCustomColor from "../../components/spinTheWheel/SpinTheWheelCustomColor";
+import SpinTheWheelColorPicker from "../../components/spinTheWheel/SpinTheWheelColorPicker";
+import SpinTheWheelImageUploader from "../../components/spinTheWheel/SpinTheWheelImageUploader";
 
-interface SelectedOption {
-  value: string;
-}
-
-export interface initialType {
-  id: string;
-  segments: string;
-  segColors: string;
-  backgroundColor: {
-    imgName: string;
-    imgUrl: string;
-    color: string;
-  };
-  spinnerColor: {
-    imgName: string;
-    imgUrl: string;
-    color: string;
-  };
-  primaryColor: string;
-  numberOfSpins: number;
-  probability: {
-    label: string;
-    probability: number;
-    coupon_code: string;
-    isWin: string;
-    color: string;
-  }[];
-}
 const SpinTheWheelSetting = () => {
-  const [contentsErr, setContentsErr] = useState<string | undefined>(undefined);
-  const [isFormValid, setisFormValid] = useState<boolean>(false);
-  const spinformdata: initialType = useSelector(getSpinRawFormData);
-  const [spinRawFormData, setSpinRawFormData] =
-    useState<initialType>(spinformdata);
+  const spinFormData: spinTheWheelType = useSelector(getSpinTheWheelSetting);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    setSpinRawFormData(spinformdata);
-  }, [spinformdata]);
   const handleNumberOfSpins = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseInt(e.target.value, 10);
     // Allow positive numbers only
 
     if (isNaN(inputValue) || inputValue >= 0) {
-      const updateRawData = { ...spinRawFormData };
-      updateRawData.numberOfSpins = inputValue;
-      setSpinRawFormData(updateRawData);
-      if (isNaN(inputValue)) {
-        updateRawData.numberOfSpins = 1;
-        setSpinRawFormData(updateRawData);
-      }
+      const updateSpinFormData = { ...spinFormData };
+      updateSpinFormData.numberOfSpins = inputValue;
+      dispatch(setSpinTheWheelSetting(updateSpinFormData));
     }
-  };
-
-  const dispatch = useDispatch();
-
-  const onSubmit = async () => {
-    setContentsErr(undefined);
-    try {
-      const segments: string[] = spinRawFormData.segments
-        .split(",")
-        .map((content: string) => content.trim());
-      if (segments.length < 2) {
-        setContentsErr("Contents must be atleast 2");
-      }
-      const segColors: string[] = spinRawFormData.segColors
-        .split(",")
-        .map((content: string) => content.trim());
-      if (segColors.length < 2) {
-        setContentsErr("Contents must be atleast 2");
-      }
-      const id = uuid();
-      const formData = {
-        id,
-        segments,
-        segColors,
-        backgroundColor: spinRawFormData.backgroundColor,
-        spinnerColor: spinRawFormData.spinnerColor,
-        primaryColor: spinRawFormData.primaryColor,
-        numberOfSpins: spinRawFormData.numberOfSpins,
-        probability: spinRawFormData.probability,
-      };
-      console.log({ formData });
-      setisFormValid(true);
-      dispatch(updateSpinRawFormData({ ...spinRawFormData, id }));
-      dispatch(setSpinTheWheelSettings(formData));
-      console.log({ formData });
-    } catch (err) {
-      console.log(err);
-      setContentsErr(undefined);
+    if (isNaN(inputValue)) {
+      const updateSpinFormData = { ...spinFormData };
+      updateSpinFormData.numberOfSpins = 1;
+      dispatch(setSpinTheWheelSetting(updateSpinFormData));
     }
   };
 
   const handleBlur = () => {
-    const contents = spinRawFormData.segments
-      .split(",")
-      .map((item: string) => ({
+    const contents: spinTheWheelProbabilityType[] = spinFormData.segments.map(
+      (item: string) => ({
         label: item.trim(),
         probability: 100,
         coupon_code: "",
         isWin: "win",
         color: "#000000",
-      }));
-    const updateRawData = { ...spinRawFormData };
-    updateRawData.probability = contents;
-    setSpinRawFormData(updateRawData);
-    dispatch(updateSpinRawFormData(updateRawData));
+      })
+    );
+    const updateSpinFormData = { ...spinFormData };
+    updateSpinFormData.gameSetting = contents;
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
   const handlePercentageChange = (index: number, value: string) => {
-    const updateRawData = { ...spinRawFormData };
-    const updatedContents = [...spinRawFormData.probability];
-    console.log(updatedContents);
+    const updateSpinFormData = { ...spinFormData };
+    const updatedContents = [...spinFormData.gameSetting];
     updatedContents[index] = {
       ...updatedContents[index],
       probability: parseInt(value, 10) || 0,
     };
-    updateRawData.probability = updatedContents;
-    setSpinRawFormData(updateRawData);
+    updateSpinFormData.gameSetting = updatedContents;
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
+  };
+  const handleCouponCode = (index: number, value: string) => {
+    const updateSpinFormData = { ...spinFormData };
+    const updatedContents = [...spinFormData.gameSetting];
+    updatedContents[index] = {
+      ...updatedContents[index],
+      coupon_code: value,
+    };
+    updateSpinFormData.gameSetting = updatedContents;
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
+  };
+  const handleSelectChange = (index: number, value: string) => {
+    const updateSpinFormData = { ...spinFormData };
+    const updatedContents = [...spinFormData.gameSetting];
+    if (value === "win" || value === "no_win") {
+      updatedContents[index] = {
+        ...updatedContents[index],
+        isWin: value,
+      };
+      updateSpinFormData.gameSetting = updatedContents;
+      dispatch(setSpinTheWheelSetting(updateSpinFormData));
+    }
+  };
+  const handleColorWheel = (color: string, index: number) => {
+    const updateSpinFormData = { ...spinFormData };
+    if (index !== undefined) {
+      updateSpinFormData.gameSetting = updateSpinFormData.gameSetting.map(
+        (items, index2) => {
+          if (index === index2) {
+            items = { ...items, color: color };
+          }
+          return items;
+        }
+      );
+    }
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
   const handleInputBlur = () => {
     // Ensure at least one input is not zero
-    const allZero = spinRawFormData.probability.every(
+    const allZero = spinFormData.gameSetting.every(
       (item) => item.probability === 0
     );
     if (allZero) {
-      const updateRawData = { ...spinRawFormData };
+      const updateSpinFormData = { ...spinFormData };
       // Find the first input and set it to 1 if all inputs are zero
-      const updatedProbability = [...spinRawFormData.probability];
+      const updatedProbability = [...spinFormData.gameSetting];
       updatedProbability[0] = { ...updatedProbability[0], probability: 1 };
-      updateRawData.probability = updatedProbability;
-      setSpinRawFormData(updateRawData);
+      updateSpinFormData.gameSetting = updatedProbability;
+      dispatch(setSpinTheWheelSetting(updateSpinFormData));
       toast.warn("Atleast one content probability must be 1");
     }
   };
-  console.log({ spinRawFormData });
-  const handleSelectedOptions = (selectedOptions: SelectedOption[]) => {
+  const handleSelectedOptions = (selectedOptions: string[]) => {
     // Do something with the selected options in this component
-    console.log({ selectedOptions });
-    const newSelectedOptions = selectedOptions
-      .map((option) => option.value)
-      .join(",");
-    const updateRawData = { ...spinRawFormData };
-    updateRawData.segments = newSelectedOptions;
-    setSpinRawFormData(updateRawData);
+    const updateSpinFormData = { ...spinFormData };
+    updateSpinFormData.segments = selectedOptions;
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
-  const handleSelectedColors = (selectedOptions: SelectedOption[]) => {
+  const handleSelectedColors = (selectedOptions: string[]) => {
     // Do something with the selected options in this component
-    const newSelectedOptions = selectedOptions
-      .map((option) => option.value)
-      .join(",");
-    const updateRawData = { ...spinRawFormData };
-    updateRawData.segColors = newSelectedOptions;
-    setSpinRawFormData(updateRawData);
+    const updateSpinFormData = { ...spinFormData };
+    updateSpinFormData.segColors = selectedOptions;
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
   const handleImageClear = (name: string) => {
-    const updateRawData = { ...spinRawFormData };
+    const updateSpinFormData = { ...spinFormData };
     if (name === "spinner") {
-      updateRawData.spinnerColor = {
-        ...updateRawData.spinnerColor,
+      updateSpinFormData.spinner = {
+        ...updateSpinFormData.spinner,
         imgName: "",
         imgUrl: "",
       };
     }
     if (name === "background") {
-      updateRawData.backgroundColor = {
-        ...updateRawData.backgroundColor,
+      updateSpinFormData.background = {
+        ...updateSpinFormData.background,
         imgName: "",
         imgUrl: "",
       };
     }
-    setSpinRawFormData(updateRawData);
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
+  };
+  const handleSpinnerStyle = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value) {
+      const updateSpinFormData = { ...spinFormData };
+      updateSpinFormData.spinnerStyle = e.target.value;
+      dispatch(setSpinTheWheelSetting(updateSpinFormData));
+    }
   };
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
     content: string
   ) => {
-    const updateScratchCardData = { ...scratchCardData };
+    const updateSpinFormData = { ...spinFormData };
     if (content === "description") {
-      updateScratchCardData.description = e.target.value;
+      updateSpinFormData.description = e.target.value;
     }
     if (content === "heading") {
-      updateScratchCardData.heading = e.target.value;
+      updateSpinFormData.heading = e.target.value;
     }
-    dispatch(setScratchCard(updateScratchCardData));
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
   return (
     <div className="w-full mt-5 p-2">
@@ -211,7 +170,7 @@ const SpinTheWheelSetting = () => {
             id="heading"
             className="w-[70%] border bg-[#F1F5F9] p-1 outline-slate-400"
             onChange={(e) => handleTextChange(e, "heading")}
-            value={scratchCardData.heading}
+            value={spinFormData.heading}
           />
         </div>
         <div className="w-full flex gap-5">
@@ -220,7 +179,7 @@ const SpinTheWheelSetting = () => {
           </label>
           <textarea
             onChange={(e) => handleTextChange(e, "description")}
-            value={scratchCardData.description}
+            value={spinFormData.description}
             id="description"
             rows={5}
             cols={30}
@@ -228,177 +187,169 @@ const SpinTheWheelSetting = () => {
           />
         </div>
       </div>
-      <div className="w-full p-4 lg:p-8">
-        <h2 className="font-bold text-base">Create Spin the wheel</h2>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-          className="flex flex-col items-center"
-        >
-          <div className="flex flex-col items-center w-full mt-5 md:mt-10 px-5">
-            <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
-              <label htmlFor="contents" className="mb-2 font-bold">
-                Content on wheel
-              </label>
-              <CustomInput
-                onSelectOptions={handleSelectedOptions}
-                onblur={handleBlur}
-              />
-              <small
-                className={`${
-                  contentsErr === "undefined" ? "hidden" : "block text-rose-400"
-                } text-red`}
-              >
-                {contentsErr}
-              </small>
-            </div>
-            <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
-              <label htmlFor="contents" className="mb-2 font-bold">
-                Color of wheel (Sections)
-              </label>
+      <h3 className="my-5 text-slate-500 font-semibold">Wheel Setting</h3>
+      <div className="flex flex-col items-center w-full pl-3">
+        <div className="w-full flex flex-col mb-3 bg-input_bg rounded-xl">
+          <label htmlFor="contents" className="mb-2 font-semibold">
+            Content on wheel
+          </label>
+          <SpinTheWheelCustomInput
+            onSelectOptions={handleSelectedOptions}
+            onblur={handleBlur}
+          />
+        </div>
+        <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
+          <label htmlFor="contents" className="mb-2 font-semibold">
+            Color of wheel (Sections)
+          </label>
 
-              <CustomColor onSelectOptions={handleSelectedColors} />
+          <SpinTheWheelCustomColor onSelectOptions={handleSelectedColors} />
+        </div>
+        <div className="w-full flex justify-start self-start">
+          <div className="font-semibold flex flex-col gap-5 min-w-[50%]">
+            <div className="flex place-items-center gap-3">
+              <span className="w-4/5 whitespace-nowrap">Spinner</span>
+              <div className="w-1/5 flex justify-end">
+                <SpinTheWheelColorPicker
+                  defaultColor={spinFormData.spinner.color || "#000000"}
+                  name="spinner"
+                />
+              </div>
+              <SpinTheWheelImageUploader name="spinner" />
+              {spinFormData.spinner.imgName && (
+                <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
+                  {spinFormData.spinner.imgName}
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => {
+                      handleImageClear("spinner");
+                    }}
+                  >
+                    x
+                  </span>
+                </span>
+              )}
             </div>
-            <div className="w-full flex justify-start my-5 self-start">
-              <div className="font-semibold flex flex-col gap-5 min-w-[30%]">
-                <div className="flex place-items-center gap-3">
-                  <span className="w-4/5 whitespace-nowrap">Spinner</span>
-                  <div className="w-1/5 flex justify-end">
-                    <ColorPicker2 defaultColor="#3498db" name="spinner" />
-                  </div>
-                  <ImageUploader name="spinner" />
-                  {spinRawFormData.spinnerColor.imgName && (
-                    <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
-                      {spinRawFormData.spinnerColor.imgName}
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => {
-                          handleImageClear("spinner");
-                        }}
-                      >
-                        x
-                      </span>
-                    </span>
-                  )}
-                </div>
+            <div className="flex place-items-center w-full">
+              <span className="w-4/5 whitespace-nowrap">Spinner Style</span>
+              <div className="w-4/5 flex justify-end">
+                <select
+                  value={spinFormData.spinnerStyle}
+                  className="py-1 px-2 border-none outline-none  w-full bg-[#F1F5F9] rounded-full"
+                  onChange={handleSpinnerStyle}
+                >
+                  <option>Select a style</option>
+                  <option>Center</option>
+                  <option>Top</option>
+                  <option>Left</option>
+                  <option>Right</option>
+                  <option>Bottom</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex place-items-center gap-3">
+              <span className="w-4/5 whitespace-nowrap">Border</span>
+              <div className="w-1/5 flex justify-end">
+                <SpinTheWheelColorPicker
+                  defaultColor={spinFormData.border || "#000000"}
+                  name="border"
+                />
+              </div>
+            </div>
+            <div className="flex place-items-center gap-3">
+              <span className="w-4/5 whitespace-nowrap">Background</span>
+              <div className="w-1/5 flex justify-end">
+                <SpinTheWheelColorPicker
+                  defaultColor={spinFormData.background.color || "#000000"}
+                  name="background"
+                />
+              </div>
+              <SpinTheWheelImageUploader name="background" />
+              {spinFormData.background.imgName && (
+                <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
+                  {spinFormData.background.imgName}
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => {
+                      handleImageClear("background");
+                    }}
+                  >
+                    x
+                  </span>
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="w-full flex flex-col py-2 my-5 bg-input_bg rounded-xl">
+          <label htmlFor="contents" className="mb-2 font-semibold">
+            Number of Spins
+          </label>
+          <input
+            type="number"
+            id="numberInput"
+            min={1}
+            className="py-2 px-2 border-none outline-none bg-inputBg"
+            value={spinFormData.numberOfSpins}
+            onChange={handleNumberOfSpins}
+          />
+        </div>
+        <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
+          <div className="grid grid-cols-5 mb-5">
+            <label className="font-semibold text-center"></label>
+            <label className="font-semibold text-center">Probability</label>
+            <label className="font-semibold text-center">Coupon code</label>
+            <label className="font-semibold text-center">Win/No Win</label>
+            <label className="font-semibold text-center">Text Color</label>
+          </div>
+          <div className="w-full flex flex-col gap-y-3">
+            {spinFormData.gameSetting.map((content, index) => (
+              <div key={index} className="w-full grid grid-cols-5 gap-x-5">
                 <div className="flex place-items-center">
-                  <span className="w-4/5 whitespace-nowrap">Spinner Style</span>
-                  <div className="w-1/5 flex justify-end">
-                    {/* <ColorPicker2 defaultColor="#3498db" /> */}
-                  </div>
+                  <div>{content.label}</div>
                 </div>
-                <div className="flex place-items-center gap-3">
-                  <span className="w-4/5 whitespace-nowrap">Border</span>
-                  <div className="w-1/5 flex justify-end">
-                    <ColorPicker2 defaultColor="#3498db" name="border" />
-                  </div>
-                  <div className="">
-                    <ImageUploader name="background" />
-                  </div>
+                <div>
+                  <input
+                    value={content.probability}
+                    placeholder="Percentage"
+                    className="py-1 px-2 border-none outline-none w-full bg-inputBg"
+                    onChange={(e) =>
+                      handlePercentageChange(index, e.target.value)
+                    }
+                    onBlur={handleInputBlur}
+                  />
                 </div>
-                <div className="flex place-items-center gap-3">
-                  <span className="w-4/5 whitespace-nowrap">Background</span>
-                  <div className="w-1/5 flex justify-end">
-                    <ColorPicker2 defaultColor="#3498db" name="background" />
-                  </div>
-                  <ImageUploader name="background" />
-                  {/* <BackgroundUploader /> */}
-                  {spinRawFormData.backgroundColor.imgName && (
-                    <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
-                      {spinRawFormData.backgroundColor.imgName}
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => {
-                          handleImageClear("background");
-                        }}
-                      >
-                        x
-                      </span>
-                    </span>
-                  )}
+                <div>
+                  <input
+                    value={content.coupon_code}
+                    onChange={(e) => handleCouponCode(index, e.target.value)}
+                    className="py-1 px-2 border-none outline-none bg-inputBg w-full"
+                  />
+                </div>
+                <div>
+                  <select
+                    value={content.isWin}
+                    onChange={(e) => handleSelectChange(index, e.target.value)}
+                    className="py-1 px-2 border-none outline-none bg-inputBg w-full"
+                  >
+                    <option value={"win"}>Win</option>
+                    <option value={"no_win"}>No Win</option>
+                  </select>
+                </div>
+                <div className="flex place-items-center justify-center">
+                  <SpinTheWheelColorPicker
+                    defaultColor={content.color}
+                    name={index.toString()}
+                    handleColorWheel={handleColorWheel}
+                  />
                 </div>
               </div>
-            </div>
-            <div className="w-full flex flex-col py-2 my-5 bg-input_bg rounded-xl">
-              <label htmlFor="contents" className="mb-2 font-bold">
-                Number of Spins
-              </label>
-              <input
-                type="number"
-                id="numberInput"
-                min={1}
-                className="py-2 px-2 border-none outline-none"
-                value={spinRawFormData.numberOfSpins}
-                onChange={handleNumberOfSpins}
-              />
-            </div>
-            <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
-              <div className="grid grid-cols-5 mb-5">
-                <label className="font-bold text-center"></label>
-                <label className="font-bold text-center">Probability</label>
-                <label className="font-bold text-center">Coupon code</label>
-                <label className="font-bold text-center">Win/No Win</label>
-                <label className="font-bold text-center">Text Color</label>
-              </div>
-              <div className="w-full flex flex-col gap-y-3">
-                {spinRawFormData.probability.map((content, index) => (
-                  <div key={index} className="w-full grid grid-cols-5 gap-x-5">
-                    <div className="flex place-items-center">
-                      <div>{content.label}</div>
-                    </div>
-                    <div>
-                      <input
-                        value={content.probability}
-                        placeholder="Percentage"
-                        className="py-1 px-2 border-none outline-none  w-full"
-                        onChange={(e) =>
-                          handlePercentageChange(index, e.target.value)
-                        }
-                        onBlur={handleInputBlur}
-                      />
-                    </div>
-                    <div>
-                      <input
-                        value={content.coupon_code}
-                        className="py-1 px-2 border-none outline-none  w-full"
-                      />
-                    </div>
-                    <div>
-                      <select
-                        value={content.isWin}
-                        className="py-1 px-2 border-none outline-none  w-full"
-                      >
-                        <option value={"win"}>Win</option>
-                        <option value={"no_win"}>No Win</option>
-                      </select>
-                    </div>
-                    <div className="flex place-items-center justify-center">
-                      <ColorPicker2
-                        defaultColor={content.color}
-                        name="probability"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="w-full flex justify-around items-center">
-            <ClickEffectButton
-              label={"Update Wheel"}
-              clickFunction={() => {}}
-            />
-            {isFormValid && (
-              <Link
-                to="/campaigns/spin-the-wheel"
-                className="flex items-center gap-2"
-              >
-                Go to game
-                <ArrowRight size="32" color="#FF8A65" />
-              </Link>
-            )}
-          </div>
-        </form>
+        </div>
+      </div>
+      <div className="w-full flex justify-around items-center">
+        {/* <ClickEffectButton label={"Update Wheel"} clickFunction={() => {}} /> */}
       </div>
     </div>
   );

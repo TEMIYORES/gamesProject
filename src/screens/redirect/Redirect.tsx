@@ -12,14 +12,20 @@ import {
   spinTheWheelType,
 } from "../../slices/spinthewheel";
 import PreviewSpinTheWheel from "../spinTheWheel/EntrySpinTheWheel";
-import { ProfileCircle, Send } from "iconsax-react";
-const Entry = () => {
+import { Add, Trash } from "iconsax-react";
+import RedirectSpinTheWheel from "../spinTheWheel/RedirectSpinTheWheel";
+import { EnvelopeOpen, FacebookLogo, TwitterLogo } from "@phosphor-icons/react";
+import SpinTheWheelImageUploader from "../../components/spinTheWheel/SpinTheWheelImageUploader";
+import { toast } from "react-toastify";
+import { setAllGames } from "../../slices/allGames";
+import { useNavigate } from "react-router";
+const Redirect = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const dispatch = useDispatch();
   const [selectedGame, setSelectGameSetting] =
     useState<spinTheWheelType | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (gameType === "Spin the wheel") {
       setSelectGameSetting(spinSetting);
@@ -32,12 +38,67 @@ const Entry = () => {
   ) => {
     const updateScratchCardData = { ...selectedGame };
     if (content === "description") {
-      updateScratchCardData.description = e.target.value;
+      updateScratchCardData.redirectDescription = e.target.value;
     }
     if (content === "heading") {
-      updateScratchCardData.heading = e.target.value;
+      updateScratchCardData.redirectHeading = e.target.value;
     }
     dispatch(setSpinTheWheelSetting(updateScratchCardData));
+  };
+  const handleImageClear = (name: string) => {
+    const updateSpinFormData = { ...selectedGame };
+    if (name === "redirect_bg") {
+      updateSpinFormData.redirectBackground = {
+        ...updateSpinFormData.redirectBackground!,
+        imgName: "",
+        imgUrl: "",
+      };
+    }
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
+  };
+  const PublishGame = () => {
+    let publishedGames;
+    if (localStorage.getItem("publishedGames")) {
+      publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
+    }
+    console.log({ publishedGames });
+    if (publishedGames) {
+      const updateSelectedGame = { ...selectedGame };
+      updateSelectedGame.createDate = new Date();
+      updateSelectedGame.gameStatus = "published";
+      const duplicateGame = publishedGames.filter(
+        (game: any) => game.id === updateSelectedGame.id
+      );
+      if (duplicateGame.length) {
+        toast.warn("Game already saved!");
+        dispatch(setSpinTheWheelSetting({}));
+        navigate("/");
+        return;
+      }
+      const updatedGames = [...publishedGames, updateSelectedGame];
+      const uniqueGames = Array.from(
+        new Set(updatedGames.map((item) => item.id))
+      ).map((id) => {
+        return updatedGames.find((item) => item.id === id);
+      });
+      dispatch(setAllGames([uniqueGames]));
+      localStorage.setItem("publishedGames", JSON.stringify(uniqueGames));
+      toast.success("Game published successfully");
+      dispatch(setSpinTheWheelSetting({}));
+      navigate("/");
+    } else {
+      const updateSelectedGame = { ...selectedGame };
+      updateSelectedGame.createDate = new Date();
+      updateSelectedGame.gameStatus = "published";
+      dispatch(setAllGames([updateSelectedGame]));
+      localStorage.setItem(
+        "publishedGames",
+        JSON.stringify([updateSelectedGame])
+      );
+      toast.success("Game published successfully");
+      dispatch(setSpinTheWheelSetting({}));
+      navigate("/");
+    }
   };
   return (
     <div className="flex">
@@ -54,7 +115,7 @@ const Entry = () => {
                 id="heading"
                 className="w-[70%] border bg-[#F1F5F9] p-1 outline-slate-400"
                 onChange={(e) => handleTextChange(e, "heading")}
-                value={selectedGame?.heading}
+                value={selectedGame?.redirectHeading}
               />
             </div>
             <div className="w-full flex gap-5">
@@ -63,12 +124,31 @@ const Entry = () => {
               </label>
               <textarea
                 onChange={(e) => handleTextChange(e, "description")}
-                value={selectedGame?.description}
+                value={selectedGame?.redirectDescription}
                 id="description"
                 rows={5}
                 cols={30}
                 className="w-[70%] border bg-[#F1F5F9] p-1 outline-slate-400"
               />
+            </div>
+            <div className="w-full flex gap-5">
+              <label htmlFor="description" className="font-semibold">
+                Background
+              </label>
+              <SpinTheWheelImageUploader name="redirect_background" />
+              {selectedGame?.redirectBackground.imgName && (
+                <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
+                  {selectedGame?.redirectBackground.imgName}
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => {
+                      handleImageClear("redirect_bg");
+                    }}
+                  >
+                    x
+                  </span>
+                </span>
+              )}
             </div>
             <div>
               <label htmlFor="fields" className="font-semibold">
@@ -76,31 +156,37 @@ const Entry = () => {
               </label>
               <div className="w-[95%] flex flex-col gap-3 mt-3">
                 <div className="flex gap-4 place-items-center">
-                  <div className="p-3 rounded-md bg-inputBg flex gap-3 w-[90%]">
-                    <ProfileCircle size="20" color="#150080" variant="Bold" />
-                    <span>Firstname</span>
+                  <div className="place-items-center p-3 rounded-md bg-inputBg flex gap-3 w-[90%]">
+                    <FacebookLogo size={32} color="#150080" weight="fill" />
+                    <span>Facebook</span>
                   </div>
-                  {/* <Trash size="28" color="#9c9c9c" variant="Bold" /> */}
+                  <Trash size="28" color="#9c9c9c" variant="Bold" />
                 </div>
                 <div className="flex gap-4 place-items-center">
-                  <div className="p-3 rounded-md bg-inputBg flex gap-3 w-[90%]">
-                    <ProfileCircle size="20" color="#150080" variant="Bold" />
-                    <span>Lastname</span>
+                  <div className="place-items-center p-3 rounded-md bg-inputBg flex gap-3 w-[90%]">
+                    <TwitterLogo size="28" color="#150080" weight="fill" />
+                    <span>Twitter</span>
                   </div>
-                  {/* <Trash size="28" color="#9c9c9c" variant="Bold" /> */}
+                  <Trash size="28" color="#9c9c9c" variant="Bold" />
                 </div>
                 <div className="flex gap-4 place-items-center">
-                  <div className="p-3 rounded-md bg-inputBg flex gap-3 w-[90%]">
-                    <Send size="20" color="#150080" variant="Bold" />
+                  <div className="place-items-center p-3 rounded-md bg-inputBg flex gap-3 w-[90%]">
+                    <EnvelopeOpen size={32} color="#150080" weight="fill" />
                     <span>Email Address</span>
                   </div>
-                  {/* <Trash size="28" color="#9c9c9c" variant="Bold" /> */}
+                  <Trash size="28" color="#9c9c9c" variant="Bold" />
                 </div>
-                {/* <div className="p-3 flex gap-1 place-items-center cursor-pointer">
+                <div className="p-3 flex gap-1 place-items-center cursor-pointer">
                   <Add size="20" color="#150080" />
-                  Add Form Field
-                </div> */}
+                  Add Socials
+                </div>
               </div>
+              <button
+                className="bg-primary text-white rounded-md p-3 w-2/5"
+                onClick={PublishGame}
+              >
+                Publish
+              </button>
             </div>
           </div>
         </div>
@@ -140,7 +226,7 @@ const Entry = () => {
             </div>
           </div>
           <div className="w-full mt-20 flex flex-col place-items-center justify-center">
-            {gameType === "Spin the wheel" && <PreviewSpinTheWheel />}
+            {gameType === "Spin the wheel" && <RedirectSpinTheWheel />}
             {gameType === "Scratch Card" && <PreviewSpinTheWheel />}
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
@@ -152,4 +238,4 @@ const Entry = () => {
   );
 };
 
-export default Entry;
+export default Redirect;

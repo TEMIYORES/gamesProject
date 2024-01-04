@@ -1,16 +1,18 @@
 import { CloseCircle, GalleryAdd } from "iconsax-react";
 import React, { useState } from "react";
-import imgIcon from "../assets/img.png";
+import imgIcon from "../../assets/img.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSpinTheWheelSetting,
   setSpinTheWheelSetting,
-} from "../slices/spinthewheel";
+} from "../../slices/spinthewheel";
 
-interface ImageUploaderType {
+interface SpinTheWheelImageUploaderType {
   name: string;
 }
-const ImageUploader: React.FC<ImageUploaderType> = ({ name }) => {
+const SpinTheWheelImageUploader: React.FC<SpinTheWheelImageUploaderType> = ({
+  name,
+}) => {
   const spinFormData = useSelector(getSpinTheWheelSetting);
   const [toggleUploader, setToggleUploader] = useState(false);
   const dispatch = useDispatch();
@@ -36,6 +38,14 @@ const ImageUploader: React.FC<ImageUploaderType> = ({ name }) => {
             imgName: file.name,
           };
           updateSpinData.background.imgUrl = uploadedImageUrl;
+          dispatch(setSpinTheWheelSetting(updateSpinData));
+        }
+        if (name === "redirect_background") {
+          updateSpinData.redirectBackground = {
+            ...updateSpinData.redirectBackground,
+            imgName: file.name,
+          };
+          updateSpinData.redirectBackground.imgUrl = uploadedImageUrl;
           dispatch(setSpinTheWheelSetting(updateSpinData));
         }
         setToggleUploader(false);
@@ -67,6 +77,14 @@ const ImageUploader: React.FC<ImageUploaderType> = ({ name }) => {
             imgName: file.name,
           };
           updateSpinData.background.imgUrl = droppedImageUrl;
+          dispatch(setSpinTheWheelSetting(updateSpinData));
+        }
+        if (name === "redirect_background") {
+          updateSpinData.redirectBackground = {
+            ...updateSpinData.redirectBackground,
+            imgName: file.name,
+          };
+          updateSpinData.redirectBackground.imgUrl = droppedImageUrl;
           dispatch(setSpinTheWheelSetting(updateSpinData));
         }
         setToggleUploader(false);
@@ -101,6 +119,15 @@ const ImageUploader: React.FC<ImageUploaderType> = ({ name }) => {
       {name === "background" && (
         <input
           id="bgUpload"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+      )}
+      {name === "redirect_background" && (
+        <input
+          id="redirectBgUpload"
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
@@ -143,6 +170,20 @@ const ImageUploader: React.FC<ImageUploaderType> = ({ name }) => {
                   </div>
                 </label>
               )}
+              {name === "redirect_background" && (
+                <label htmlFor="redirectBgUpload" className="w-full">
+                  <div
+                    className="mt-8 w-full h-32 border-dashed border-2 border-gray-400 mb-4 rounded-lg cursor-pointer flex flex-col place-items-center justify-center gap-y-2"
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                  >
+                    <img src={imgIcon} alt="img icon" className="w-1/5" />
+                    <p className="text-xs text-slate-400">
+                      Drop your file or click to browse
+                    </p>
+                  </div>
+                </label>
+              )}
             </div>
           </div>
           <div
@@ -157,4 +198,4 @@ const ImageUploader: React.FC<ImageUploaderType> = ({ name }) => {
   );
 };
 
-export default ImageUploader;
+export default SpinTheWheelImageUploader;

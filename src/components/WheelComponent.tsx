@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  getSpinTheWheelSettings,
-  initialType,
-  updateSpinsLeft,
-} from "../slices/spinthewheelSettings";
-import { useDispatch, useSelector } from "react-redux";
+import { spinTheWheelType, updateSpinsLeft } from "../slices/spinthewheel";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 interface Item {
   label: string;
   probability: number;
@@ -16,6 +13,8 @@ interface WheelComponentType {
   id: string;
   segments: string[];
   segColors: string[];
+  numberofSpins: number;
+  spinFormData: spinTheWheelType;
   winningSegment?: string | null | undefined;
   onFinished: (value: string) => void;
   primaryColor?: string;
@@ -31,7 +30,9 @@ const WheelComponent = ({
   segments,
   segColors,
   winningSegment,
+  spinFormData,
   onFinished,
+  numberofSpins,
   primaryColor = "black",
   contrastColor = "white",
   buttonText = "Spin",
@@ -42,16 +43,9 @@ const WheelComponent = ({
   fontFamily = "proxima-nova",
 }: WheelComponentType) => {
   const dispatch = useDispatch();
-  const spinTheWheelsettings: initialType | null = useSelector(
-    getSpinTheWheelSettings
-  );
-  const [containerTopOffset, setcontainerTopOffset] = useState<string>(
-    "calc(100vh - 100px)"
-  );
+  const spinTheWheelsettings: spinTheWheelType | null = spinFormData;
 
-  const [spinsLeft, setSpinsLeft] = useState(
-    spinTheWheelsettings?.numberOfSpins
-  );
+  const [spinsLeft, setSpinsLeft] = useState(numberofSpins);
   let currentSegment = "";
   let isStarted = false;
   const [isFinished, setFinished] = useState(false);
@@ -90,8 +84,8 @@ const WheelComponent = ({
     }
   };
   const generateBiasedOutput: () => string | null | undefined = () => {
-    if (spinTheWheelsettings?.probability) {
-      const selected = getRandomItem(spinTheWheelsettings.probability);
+    if (spinTheWheelsettings?.gameSetting) {
+      const selected = getRandomItem(spinTheWheelsettings.gameSetting);
       if (selected) {
         return selected?.label;
       } else {
@@ -165,7 +159,7 @@ const WheelComponent = ({
     while (angleCurrent >= Math.PI * 2) angleCurrent -= Math.PI * 2;
     if (finished) {
       if ((spinsLeft as number) >= 1) {
-        setSpinsLeft((prevSpins) => (prevSpins as number) - 1);
+        setSpinsLeft((prevSpins: number) => (prevSpins as number) - 1);
       }
       setFinished(true);
       onFinished(currentSegment);
@@ -288,21 +282,26 @@ const WheelComponent = ({
     }
   }, [dispatch, isFinished, spinsLeft]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const navigate = useNavigate();
   useEffect(() => {
-    const container = document.getElementById("quiz-container");
-    if (container) {
-      const resultHeight = window.innerHeight - container.offsetTop;
-      setcontainerTopOffset(`calc(${resultHeight}px)`);
+    if (spinTheWheelsettings.gameStatus === "published") {
+      if (spinsLeft === 0) {
+        navigate(`/redirect/${spinTheWheelsettings.id}`);
+      }
     }
-  });
+  }, [
+    spinsLeft,
+    navigate,
+    spinTheWheelsettings.id,
+    spinTheWheelsettings.gameStatus,
+  ]);
   return (
     <div
       id="wheel"
-      className="flex flex-col justify-center items-center pt-20"
+      className="flex flex-col justify-center items-center pt-20 h-screen w-full"
       style={{
-        backgroundColor: `${spinTheWheelsettings?.backgroundColor}`,
-        height: containerTopOffset,
+        backgroundColor: `${spinTheWheelsettings?.background.color}`,
+        backgroundImage: `url(${spinTheWheelsettings?.background.imgUrl})`,
       }}
     >
       <span className="text-base font-bold">Number of spins: {spinsLeft}</span>

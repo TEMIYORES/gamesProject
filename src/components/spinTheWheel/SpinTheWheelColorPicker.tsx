@@ -5,15 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getSpinTheWheelSetting,
   setSpinTheWheelSetting,
-} from "../slices/spinthewheel";
+} from "../../slices/spinthewheel";
 
 interface ColorPickerProps {
   defaultColor: string;
   name: string;
-  handleColorWheel?: (color: string) => void;
+  handleColorWheel?: (color: string, index: number) => void;
 }
 
-const ColorPicker2: React.FC<ColorPickerProps> = ({
+const SpinTheWheelColorPicker: React.FC<ColorPickerProps> = ({
   defaultColor,
   name,
   handleColorWheel,
@@ -42,7 +42,8 @@ const ColorPicker2: React.FC<ColorPickerProps> = ({
       updateSpinData.border = color.hex;
     }
     dispatch(setSpinTheWheelSetting(updateSpinData));
-    if (handleColorWheel !== undefined) handleColorWheel(color.hex);
+    if (handleColorWheel !== undefined)
+      handleColorWheel(color.hex, parseInt(name));
   };
 
   const toggleColorPicker = () => {
@@ -50,7 +51,7 @@ const ColorPicker2: React.FC<ColorPickerProps> = ({
   };
 
   return (
-    <div className="relative z-50">
+    <div className="relative ">
       <div className="">
         <span className="flex place-items-center gap-1">
           <div
@@ -85,4 +86,4 @@ const ColorPicker2: React.FC<ColorPickerProps> = ({
   );
 };
 
-export default ColorPicker2;
+export default SpinTheWheelColorPicker;
