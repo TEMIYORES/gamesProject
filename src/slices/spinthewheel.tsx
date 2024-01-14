@@ -6,8 +6,10 @@ export interface spinTheWheelType {
   heading: string;
   redirectHeading: string;
   redirectDescription: string;
+  gameHeading: string;
+  gameDescription: string;
   gameType: string;
-  gameStatus:string;
+  gameStatus: string;
   prizeWon: string;
   description: string;
   segments: string[];
@@ -35,16 +37,18 @@ export interface spinTheWheelType {
     probability: number;
     coupon_code: string;
     isWin: "win" | "no_win";
+    wheelColor: string;
     color: string;
   }[];
   fields: string[];
-  createDate: Date;
+  createDate: string;
 }
 export interface spinTheWheelProbabilityType {
   label: string;
   probability: number;
   coupon_code: string;
   isWin: "win" | "no_win";
+  wheelColor: string;
   color: string;
 }
 const initialState: spinTheWheelType = {
@@ -52,8 +56,10 @@ const initialState: spinTheWheelType = {
   heading: "",
   description: "",
   redirectHeading: "",
+  gameHeading: "",
+  gameDescription: "",
   gameType: "Spin the wheel",
-  gameStatus:"not published",
+  gameStatus: "not published",
   redirectDescription: "",
   prizeWon: "",
   background: {
@@ -78,7 +84,7 @@ const initialState: spinTheWheelType = {
   },
   spinnerStyle: "",
   fields: ["firstname", "lastname", "email_address"],
-  createDate: new Date(),
+  createDate: new Date().toISOString(),
 };
 
 const spinthewheel = createSlice({

@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 // import { v4 as uuid } from "uuid";
 import SpinTheWheelCustomInput from "../../components/spinTheWheel/SpinTheWheelCustomInput";
-import SpinTheWheelCustomColor from "../../components/spinTheWheel/SpinTheWheelCustomColor";
+// import SpinTheWheelCustomColor from "../../components/spinTheWheel/SpinTheWheelCustomColor";
 import SpinTheWheelColorPicker from "../../components/spinTheWheel/SpinTheWheelColorPicker";
 import SpinTheWheelImageUploader from "../../components/spinTheWheel/SpinTheWheelImageUploader";
 
@@ -35,12 +35,13 @@ const SpinTheWheelSetting = () => {
 
   const handleBlur = () => {
     const contents: spinTheWheelProbabilityType[] = spinFormData.segments.map(
-      (item: string) => ({
+      (item: string, index: number) => ({
         label: item.trim(),
-        probability: 100,
-        coupon_code: "",
-        isWin: "win",
-        color: "#000000",
+        probability: spinFormData.gameSetting[index]?.probability || 100,
+        coupon_code: spinFormData.gameSetting[index]?.coupon_code || "",
+        isWin: spinFormData.gameSetting[index]?.isWin || "win",
+        color: spinFormData.gameSetting[index]?.color || "#000000",
+        wheelColor: spinFormData.gameSetting[index]?.wheelColor || "#ffffff",
       })
     );
     const updateSpinFormData = { ...spinFormData };
@@ -93,6 +94,26 @@ const SpinTheWheelSetting = () => {
     }
     dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
+  // const [segColors, setSegcolors] = useState<string[]>();
+  const handleWheelColorWheel = (color: string, index: number) => {
+    // setSegcolors([])
+    const updateSpinFormData = { ...spinFormData };
+    if (index !== undefined) {
+      const segColors: string[] = [];
+      updateSpinFormData.gameSetting = updateSpinFormData.gameSetting.map(
+        (items, index2) => {
+          if (index === index2) {
+            console.log(updateSpinFormData.segColors);
+            items = { ...items, wheelColor: color };
+          }
+          segColors.push(items.wheelColor);
+          return items;
+        }
+      );
+      updateSpinFormData.segColors = segColors;
+    }
+    dispatch(setSpinTheWheelSetting(updateSpinFormData));
+  };
   const handleInputBlur = () => {
     // Ensure at least one input is not zero
     const allZero = spinFormData.gameSetting.every(
@@ -114,12 +135,12 @@ const SpinTheWheelSetting = () => {
     updateSpinFormData.segments = selectedOptions;
     dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
-  const handleSelectedColors = (selectedOptions: string[]) => {
-    // Do something with the selected options in this component
-    const updateSpinFormData = { ...spinFormData };
-    updateSpinFormData.segColors = selectedOptions;
-    dispatch(setSpinTheWheelSetting(updateSpinFormData));
-  };
+  // const handleSelectedColors = (selectedOptions: string[]) => {
+  //   // Do something with the selected options in this component
+  //   const updateSpinFormData = { ...spinFormData };
+  //   updateSpinFormData.segColors = selectedOptions;
+  //   dispatch(setSpinTheWheelSetting(updateSpinFormData));
+  // };
   const handleImageClear = (name: string) => {
     const updateSpinFormData = { ...spinFormData };
     if (name === "spinner") {
@@ -151,10 +172,10 @@ const SpinTheWheelSetting = () => {
   ) => {
     const updateSpinFormData = { ...spinFormData };
     if (content === "description") {
-      updateSpinFormData.description = e.target.value;
+      updateSpinFormData.gameDescription = e.target.value;
     }
     if (content === "heading") {
-      updateSpinFormData.heading = e.target.value;
+      updateSpinFormData.gameHeading = e.target.value;
     }
     dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
@@ -170,7 +191,7 @@ const SpinTheWheelSetting = () => {
             id="heading"
             className="w-[70%] border bg-[#F1F5F9] p-1 outline-slate-400"
             onChange={(e) => handleTextChange(e, "heading")}
-            value={spinFormData.heading}
+            value={spinFormData.gameHeading}
           />
         </div>
         <div className="w-full flex gap-5">
@@ -179,7 +200,7 @@ const SpinTheWheelSetting = () => {
           </label>
           <textarea
             onChange={(e) => handleTextChange(e, "description")}
-            value={spinFormData.description}
+            value={spinFormData.gameDescription}
             id="description"
             rows={5}
             cols={30}
@@ -189,7 +210,7 @@ const SpinTheWheelSetting = () => {
       </div>
       <h3 className="my-5 text-slate-500 font-semibold">Wheel Setting</h3>
       <div className="flex flex-col items-center w-full pl-3">
-        <div className="w-full flex flex-col mb-3 bg-input_bg rounded-xl">
+        <div className="w-full flex flex-col my-3 bg-input_bg rounded-xl">
           <label htmlFor="contents" className="mb-2 font-semibold">
             Content on wheel
           </label>
@@ -198,13 +219,13 @@ const SpinTheWheelSetting = () => {
             onblur={handleBlur}
           />
         </div>
-        <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
+        {/* <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
           <label htmlFor="contents" className="mb-2 font-semibold">
             Color of wheel (Sections)
           </label>
 
           <SpinTheWheelCustomColor onSelectOptions={handleSelectedColors} />
-        </div>
+        </div> */}
         <div className="w-full flex justify-start self-start">
           <div className="font-semibold flex flex-col gap-5 min-w-[50%]">
             <div className="flex place-items-center gap-3">
@@ -295,16 +316,17 @@ const SpinTheWheelSetting = () => {
           />
         </div>
         <div className="w-full flex flex-col py-2 mb-3 bg-input_bg rounded-xl">
-          <div className="grid grid-cols-5 mb-5">
+          <div className="grid grid-cols-6 mb-5">
             <label className="font-semibold text-center"></label>
             <label className="font-semibold text-center">Probability</label>
             <label className="font-semibold text-center">Coupon code</label>
             <label className="font-semibold text-center">Win/No Win</label>
+            <label className="font-semibold text-center">Wheel Color</label>
             <label className="font-semibold text-center">Text Color</label>
           </div>
           <div className="w-full flex flex-col gap-y-3">
             {spinFormData.gameSetting.map((content, index) => (
-              <div key={index} className="w-full grid grid-cols-5 gap-x-5">
+              <div key={index} className="w-full grid grid-cols-6 gap-x-5">
                 <div className="flex place-items-center">
                   <div>{content.label}</div>
                 </div>
@@ -335,6 +357,13 @@ const SpinTheWheelSetting = () => {
                     <option value={"win"}>Win</option>
                     <option value={"no_win"}>No Win</option>
                   </select>
+                </div>
+                <div className="flex place-items-center justify-center">
+                  <SpinTheWheelColorPicker
+                    defaultColor={content.wheelColor}
+                    name={index.toString()}
+                    handleColorWheel={handleWheelColorWheel}
+                  />
                 </div>
                 <div className="flex place-items-center justify-center">
                   <SpinTheWheelColorPicker

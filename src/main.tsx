@@ -24,12 +24,12 @@ import "react-toastify/dist/ReactToastify.css";
 import QuizGame from "./screens/quiz/QuizGame.tsx";
 import Entry from "./screens/entry/Entry.tsx";
 import Game from "./screens/game/Game.tsx";
-import YourOtherPage from "./components/UrlTest1.tsx";
 import Redirect from "./screens/redirect/Redirect.tsx";
 import EntryPage from "./screens/entry/EntryPage.tsx";
 import GamePage from "./screens/game/GamePage.tsx";
 import RedirectPage from "./screens/redirect/RedirectPage.tsx";
 import Games from "./screens/AllGames/Games.tsx";
+import TestScratchCard from "./components/Test.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,7 +39,7 @@ const router = createBrowserRouter(
         <Route index={true} element={<Home />} />
         <Route path="your-games" element={<Games />} />
 
-        <Route path="test" element={<YourOtherPage />} />
+        <Route path="test" element={<TestScratchCard />} />
         <Route path="game" element={<Game />} />
         <Route path="entry" element={<Entry />} />
         <Route path="campaigns/scratch-card" element={<ScratchCard />} />

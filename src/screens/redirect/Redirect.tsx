@@ -11,7 +11,6 @@ import {
   setSpinTheWheelSetting,
   spinTheWheelType,
 } from "../../slices/spinthewheel";
-import PreviewSpinTheWheel from "../spinTheWheel/EntrySpinTheWheel";
 import { Add, Trash } from "iconsax-react";
 import RedirectSpinTheWheel from "../spinTheWheel/RedirectSpinTheWheel";
 import { EnvelopeOpen, FacebookLogo, TwitterLogo } from "@phosphor-icons/react";
@@ -19,85 +18,125 @@ import SpinTheWheelImageUploader from "../../components/spinTheWheel/SpinTheWhee
 import { toast } from "react-toastify";
 import { setAllGames } from "../../slices/allGames";
 import { useNavigate } from "react-router";
+import RedirectScratchCard from "../scratchCard/RedirectScratchCard";
+import {
+  getScratchCardData,
+  scratchCardType,
+  setScratchCard,
+} from "../../slices/scratchCard";
+import ScratchCardImageUploader from "../../components/scratchCard/scratchCardImageUploader";
 const Redirect = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
+  const scratchcard = useSelector(getScratchCardData);
   const dispatch = useDispatch();
-  const [selectedGame, setSelectGameSetting] =
-    useState<spinTheWheelType | null>(null);
+  const [selectedGame, setSelectGameSetting] = useState<
+    spinTheWheelType | scratchCardType | null
+  >(null);
   const navigate = useNavigate();
   useEffect(() => {
     if (gameType === "Spin the wheel") {
       setSelectGameSetting(spinSetting);
     }
-  }, [gameType, spinSetting]);
+    if (gameType === "Scratch card") {
+      setSelectGameSetting(scratchcard);
+    }
+  }, [gameType, scratchcard, spinSetting]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
     content: string
   ) => {
-    const updateScratchCardData = { ...selectedGame };
-    if (content === "description") {
-      updateScratchCardData.redirectDescription = e.target.value;
+    if (selectedGame) {
+      console.log({ selectedGame });
+      const updateSelectedData = { ...selectedGame };
+      if (content === "description") {
+        updateSelectedData.redirectDescription = e.target.value;
+      }
+      if (content === "heading") {
+        updateSelectedData.redirectHeading = e.target.value;
+      }
+      if (gameType === "Spin the wheel") {
+        dispatch(setSpinTheWheelSetting(updateSelectedData));
+      }
+      if (gameType === "Scratch card") {
+        dispatch(setScratchCard(updateSelectedData));
+      }
     }
-    if (content === "heading") {
-      updateScratchCardData.redirectHeading = e.target.value;
-    }
-    dispatch(setSpinTheWheelSetting(updateScratchCardData));
   };
   const handleImageClear = (name: string) => {
-    const updateSpinFormData = { ...selectedGame };
-    if (name === "redirect_bg") {
-      updateSpinFormData.redirectBackground = {
-        ...updateSpinFormData.redirectBackground!,
-        imgName: "",
-        imgUrl: "",
-      };
+    if (selectedGame) {
+      const updateSelectedData = { ...selectedGame };
+      if (name === "redirect_bg") {
+        updateSelectedData.redirectBackground = {
+          ...updateSelectedData.redirectBackground!,
+          imgName: "",
+          imgUrl: "",
+        };
+      }
+      if (gameType === "Spin the wheel") {
+        dispatch(setSpinTheWheelSetting(updateSelectedData));
+      }
+      if (gameType === "Scratch card") {
+        dispatch(setScratchCard(updateSelectedData));
+      }
     }
-    dispatch(setSpinTheWheelSetting(updateSpinFormData));
   };
   const PublishGame = () => {
     let publishedGames;
     if (localStorage.getItem("publishedGames")) {
       publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
     }
-    console.log({ publishedGames });
     if (publishedGames) {
-      const updateSelectedGame = { ...selectedGame };
-      updateSelectedGame.createDate = new Date();
-      updateSelectedGame.gameStatus = "published";
-      const duplicateGame = publishedGames.filter(
-        (game: any) => game.id === updateSelectedGame.id
-      );
-      if (duplicateGame.length) {
-        toast.warn("Game already saved!");
+      if (selectedGame) {
+        const updateSelectedGame = { ...selectedGame };
+        updateSelectedGame.createDate = new Date().toISOString();
+        updateSelectedGame.gameStatus = "published";
+        const duplicateGame = publishedGames.filter(
+          (game: any) => game.id === updateSelectedGame.id
+        );
+        if (duplicateGame.length) {
+          toast.warn("Game already saved!");
+          if (gameType === "Spin the wheel") {
+            dispatch(setSpinTheWheelSetting({}));
+          }
+          if (gameType === "Scratch card") {
+            dispatch(setScratchCard({}));
+          }
+          navigate("/");
+          return;
+        }
+        const updatedGames = [...publishedGames, updateSelectedGame];
+        const uniqueGames = Array.from(
+          new Set(updatedGames.map((item) => item.id))
+        ).map((id) => {
+          return updatedGames.find((item) => item.id === id);
+        });
+        dispatch(setAllGames([uniqueGames]));
+        localStorage.setItem("publishedGames", JSON.stringify(uniqueGames));
+        toast.success("Game published successfully");
+        if (gameType === "Spin the wheel") {
+          dispatch(setSpinTheWheelSetting({}));
+        }
+        if (gameType === "Scratch card") {
+          dispatch(setScratchCard({}));
+        }
+        navigate("/");
+      }
+    } else {
+      if (selectedGame) {
+        const updateSelectedGame = { ...selectedGame };
+        updateSelectedGame.createDate = new Date().toISOString();
+        updateSelectedGame.gameStatus = "published";
+        dispatch(setAllGames([updateSelectedGame]));
+        localStorage.setItem(
+          "publishedGames",
+          JSON.stringify([updateSelectedGame])
+        );
+        toast.success("Game published successfully");
         dispatch(setSpinTheWheelSetting({}));
         navigate("/");
-        return;
       }
-      const updatedGames = [...publishedGames, updateSelectedGame];
-      const uniqueGames = Array.from(
-        new Set(updatedGames.map((item) => item.id))
-      ).map((id) => {
-        return updatedGames.find((item) => item.id === id);
-      });
-      dispatch(setAllGames([uniqueGames]));
-      localStorage.setItem("publishedGames", JSON.stringify(uniqueGames));
-      toast.success("Game published successfully");
-      dispatch(setSpinTheWheelSetting({}));
-      navigate("/");
-    } else {
-      const updateSelectedGame = { ...selectedGame };
-      updateSelectedGame.createDate = new Date();
-      updateSelectedGame.gameStatus = "published";
-      dispatch(setAllGames([updateSelectedGame]));
-      localStorage.setItem(
-        "publishedGames",
-        JSON.stringify([updateSelectedGame])
-      );
-      toast.success("Game published successfully");
-      dispatch(setSpinTheWheelSetting({}));
-      navigate("/");
     }
   };
   return (
@@ -135,7 +174,13 @@ const Redirect = () => {
               <label htmlFor="description" className="font-semibold">
                 Background
               </label>
-              <SpinTheWheelImageUploader name="redirect_background" />
+              {gameType === "Spin the wheel" ? (
+                <SpinTheWheelImageUploader name="redirect_background" />
+              ) : (
+                gameType === "Scratch card" && (
+                  <ScratchCardImageUploader name="redirect_background" />
+                )
+              )}
               {selectedGame?.redirectBackground.imgName && (
                 <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
                   {selectedGame?.redirectBackground.imgName}
@@ -225,9 +270,9 @@ const Redirect = () => {
               {location.href + "/" + selectedGame?.id}
             </div>
           </div>
-          <div className="w-full mt-20 flex flex-col place-items-center justify-center">
+          <div className="w-full flex flex-col place-items-center justify-center">
             {gameType === "Spin the wheel" && <RedirectSpinTheWheel />}
-            {gameType === "Scratch Card" && <PreviewSpinTheWheel />}
+            {gameType === "Scratch card" && <RedirectScratchCard />}
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
             Powered by Gamelogo

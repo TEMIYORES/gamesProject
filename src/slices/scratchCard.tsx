@@ -5,6 +5,18 @@ export interface scratchCardType {
   id: string;
   heading: string;
   description: string;
+  redirectHeading: string;
+  redirectDescription: string;
+  gameHeading: string;
+  gameDescription: string;
+  gameType: string;
+  gameStatus: string;
+  priceWon: string;
+  redirectBackground: {
+    imgName: string;
+    imgUrl: string;
+    color: string;
+  };
   background: {
     imgName: string;
     imgUrl: string;
@@ -36,13 +48,15 @@ export interface scratchCardType {
     imgName: string;
     imgUrl: string;
   }[];
+  fields: string[];
+  createDate: string;
 }
 export interface Sound {
   id: number | null;
   name: string;
   url: string;
 }
-export interface gameSettingType {
+export interface scratchGameSettingType {
   label: string;
   probability: number;
   coupon_code: string;
@@ -57,7 +71,19 @@ const initialState: scratchCardType = {
   id: "",
   heading: "",
   description: "",
+  redirectHeading: "",
+  redirectDescription: "",
+  gameHeading: "",
+  gameDescription: "",
+  gameType: "Scratch card",
+  gameStatus: "",
+  priceWon: "",
   background: {
+    imgName: "",
+    imgUrl: "",
+    color: "",
+  },
+  redirectBackground: {
     imgName: "",
     imgUrl: "",
     color: "",
@@ -79,6 +105,8 @@ const initialState: scratchCardType = {
     url: "",
   },
   gameSetting: [],
+  fields: [],
+  createDate: "",
 };
 
 const scratchCardData = createSlice({

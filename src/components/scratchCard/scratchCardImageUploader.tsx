@@ -50,6 +50,14 @@ const ScratchCardImageUploader: React.FC<ImageUploaderType> = ({
           updateScratchCardData.centerImage.imgUrl = uploadedImageUrl;
           dispatch(setScratchCard(updateScratchCardData));
         }
+        if (name === "redirect_background") {
+          updateScratchCardData.redirectBackground = {
+            ...updateScratchCardData.redirectBackground,
+            imgName: file.name,
+          };
+          updateScratchCardData.redirectBackground.imgUrl = uploadedImageUrl;
+          dispatch(setScratchCard(updateScratchCardData));
+        }
         handleImage !== undefined &&
           handleImage(file.name, uploadedImageUrl, index);
         setToggleUploader(false);
@@ -89,6 +97,14 @@ const ScratchCardImageUploader: React.FC<ImageUploaderType> = ({
             imgName: file.name,
           };
           updateScratchCardData.background.imgUrl = droppedImageUrl;
+          dispatch(setScratchCard(updateScratchCardData));
+        }
+        if (name === "redirect_background") {
+          updateScratchCardData.redirectBackground = {
+            ...updateScratchCardData.redirectBackground,
+            imgName: file.name,
+          };
+          updateScratchCardData.redirectBackground.imgUrl = droppedImageUrl;
           dispatch(setScratchCard(updateScratchCardData));
         }
         handleImage !== undefined &&
@@ -134,6 +150,15 @@ const ScratchCardImageUploader: React.FC<ImageUploaderType> = ({
       {name === "center_image" && (
         <input
           id="center_img"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+      )}
+      {name === "redirect_background" && (
+        <input
+          id="redirect_background"
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
@@ -187,6 +212,20 @@ const ScratchCardImageUploader: React.FC<ImageUploaderType> = ({
               )}
               {name === "center_image" && (
                 <label htmlFor="center_img" className="w-full">
+                  <div
+                    className="mt-8 w-full h-32 border-dashed border-2 border-gray-400 mb-4 rounded-lg cursor-pointer flex flex-col place-items-center justify-center gap-y-2"
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                  >
+                    <img src={imgIcon} alt="img icon" className="w-1/5" />
+                    <p className="text-xs text-slate-400">
+                      Drop your file or click to browse
+                    </p>
+                  </div>
+                </label>
+              )}
+              {name === "redirect_background" && (
+                <label htmlFor="redirect_background" className="w-full">
                   <div
                     className="mt-8 w-full h-32 border-dashed border-2 border-gray-400 mb-4 rounded-lg cursor-pointer flex flex-col place-items-center justify-center gap-y-2"
                     onDrop={handleDrop}

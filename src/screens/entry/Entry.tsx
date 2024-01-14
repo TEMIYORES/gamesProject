@@ -13,31 +13,49 @@ import {
 } from "../../slices/spinthewheel";
 import PreviewSpinTheWheel from "../spinTheWheel/EntrySpinTheWheel";
 import { ProfileCircle, Send } from "iconsax-react";
+import {
+  getScratchCardData,
+  scratchCardType,
+  setScratchCard,
+} from "../../slices/scratchCard";
+import EntryScratchCard from "../scratchCard/EntryScratchCard";
 const Entry = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
+  const scratchCardSetting = useSelector(getScratchCardData);
   const dispatch = useDispatch();
-  const [selectedGame, setSelectGameSetting] =
-    useState<spinTheWheelType | null>(null);
+  const [selectedGame, setSelectGameSetting] = useState<
+    spinTheWheelType | scratchCardType | null
+  >(null);
 
   useEffect(() => {
     if (gameType === "Spin the wheel") {
       setSelectGameSetting(spinSetting);
     }
-  }, [gameType, spinSetting]);
+    if (gameType === "Scratch card") {
+      setSelectGameSetting(scratchCardSetting);
+    }
+  }, [gameType, scratchCardSetting, spinSetting]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
     content: string
   ) => {
-    const updateScratchCardData = { ...selectedGame };
+    const updateData: spinTheWheelType | scratchCardType | null = {
+      ...selectedGame,
+    } as spinTheWheelType | scratchCardType;
     if (content === "description") {
-      updateScratchCardData.description = e.target.value;
+      updateData.description = e.target.value;
     }
     if (content === "heading") {
-      updateScratchCardData.heading = e.target.value;
+      updateData.heading = e.target.value;
     }
-    dispatch(setSpinTheWheelSetting(updateScratchCardData));
+    if (gameType === "Spin the wheel") {
+      dispatch(setSpinTheWheelSetting(updateData));
+    }
+    if (gameType === "Scratch card") {
+      dispatch(setScratchCard(updateData));
+    }
   };
   return (
     <div className="flex">
@@ -141,7 +159,7 @@ const Entry = () => {
           </div>
           <div className="w-full mt-20 flex flex-col place-items-center justify-center">
             {gameType === "Spin the wheel" && <PreviewSpinTheWheel />}
-            {gameType === "Scratch Card" && <PreviewSpinTheWheel />}
+            {gameType === "Scratch card" && <EntryScratchCard />}
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
             Powered by Gamelogo

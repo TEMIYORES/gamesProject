@@ -2,9 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import ScratchCardColorPicker from "../../components/scratchCard/scratchCardColorPicker";
 import {
   Sound,
-  gameSettingType,
   getScratchCardData,
   scratchCardType,
+  scratchGameSettingType,
   setScratchCard,
 } from "../../slices/scratchCard";
 import ScratchCardImageUploader from "../../components/scratchCard/scratchCardImageUploader";
@@ -21,6 +21,7 @@ const ScratchCard = () => {
         scratchCardData.gameSetting.length < scratchCardData.numberOfScratchCard
       ) {
         const updateScratchCardData = { ...scratchCardData };
+        console.log("hello");
         const newItems = Array.from(
           {
             length:
@@ -28,12 +29,12 @@ const ScratchCard = () => {
               scratchCardData.gameSetting.length,
           },
           (_, index) => {
-            const newItem: gameSettingType = {
+            const newItem: scratchGameSettingType = {
               label: `option ${scratchCardData.gameSetting.length + index + 1}`,
               probability: 100,
               coupon_code: "",
               isWin: "win",
-              color: "#ff99ff",
+              color: "#000000",
               price: "",
               imgName: "",
               imgUrl: "",
@@ -162,10 +163,10 @@ const ScratchCard = () => {
   ) => {
     const updateScratchCardData = { ...scratchCardData };
     if (content === "description") {
-      updateScratchCardData.description = e.target.value;
+      updateScratchCardData.gameDescription = e.target.value;
     }
     if (content === "heading") {
-      updateScratchCardData.heading = e.target.value;
+      updateScratchCardData.gameHeading = e.target.value;
     }
     dispatch(setScratchCard(updateScratchCardData));
   };
@@ -243,7 +244,7 @@ const ScratchCard = () => {
             id="heading"
             className="w-[70%] border bg-[#F1F5F9] p-1 outline-slate-400"
             onChange={(e) => handleTextChange(e, "heading")}
-            value={scratchCardData.heading}
+            value={scratchCardData.gameHeading}
           />
         </div>
 
@@ -253,7 +254,7 @@ const ScratchCard = () => {
           </label>
           <textarea
             onChange={(e) => handleTextChange(e, "description")}
-            value={scratchCardData.description}
+            value={scratchCardData.gameDescription}
             id="description"
             rows={5}
             cols={30}
@@ -324,7 +325,6 @@ const ScratchCard = () => {
             <option>2</option>
             <option>3</option>
             <option>4</option>
-            <option>5</option>
           </select>
         </div>
         <div className="flex gap-10 place-items-center">
@@ -435,7 +435,7 @@ const ScratchCard = () => {
                   />
                   {scratchCardData.gameSetting[index].imgName && (
                     <span className="bg-[#E6E6E6] py-1 px-2 flex place-items-center gap-x-2 whitespace-nowrap ">
-                      {scratchCardData.mobileBackground.imgName}
+                      {scratchCardData.gameSetting[index].imgName}
                       <span
                         className="cursor-pointer"
                         onClick={() => {

@@ -1,11 +1,14 @@
 import { useParams } from "react-router";
 import WheelComponent from "../../components/WheelComponent";
 import { spinTheWheelType } from "../../slices/spinthewheel";
+import { useSelector } from "react-redux";
+import { getGameType } from "../../slices/gameType";
+import MainScratchCard from "../scratchCard/MainScratchCard";
 
 const GamePage = () => {
   const params = useParams();
   const { gameId } = params;
-
+  const gameType = useSelector(getGameType);
   let publishedGames;
   if (localStorage.getItem("publishedGames")) {
     publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
@@ -17,8 +20,8 @@ const GamePage = () => {
   const onFinished = (winner: string) => {
     console.log(winner);
   };
-  return (
-    <div className="w-full h-full relative">
+  const RenderSpinTheWheel = () => {
+    return (
       <WheelComponent
         segments={selectedGame[0].segments}
         segColors={selectedGame[0].segColors}
@@ -37,6 +40,15 @@ const GamePage = () => {
         fontFamily="Arial"
         id={""}
       />
+    );
+  };
+  return (
+    <div className="w-full h-full relative">
+      {gameType === "Spin the wheel" ? (
+        <RenderSpinTheWheel />
+      ) : (
+        gameType === "Scratch card" && <MainScratchCard />
+      )}
 
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
         Powered by Gamelogo

@@ -298,14 +298,14 @@ const WheelComponent = ({
   return (
     <div
       id="wheel"
-      className="flex flex-col justify-center items-center pt-20 h-screen w-full"
+      className="flex flex-col justify-start items-center pt-10 h-screen w-full"
       style={{
         backgroundColor: `${spinTheWheelsettings?.background.color}`,
         backgroundImage: `url(${spinTheWheelsettings?.background.imgUrl})`,
       }}
     >
-      <span className="text-base font-bold">Number of spins: {spinsLeft}</span>
-      <div className="relative">
+      <span className="text-base font-bold mb-[-50px]">Number of spins: {spinsLeft}</span>
+      <div className="relativ ">
         <canvas
           className={`mx-auto flex justify-center items-center`}
           id="canvas"
