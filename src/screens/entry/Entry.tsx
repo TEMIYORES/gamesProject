@@ -19,6 +19,7 @@ import {
   setScratchCard,
 } from "../../slices/scratchCard";
 import EntryScratchCard from "../scratchCard/EntryScratchCard";
+import EntryPuzzle from "../puzzle/EntryPuzzle";
 const Entry = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
@@ -160,8 +161,9 @@ const Entry = () => {
           <div className="w-full mt-20 flex flex-col place-items-center justify-center">
             {gameType === "Spin the wheel" && <PreviewSpinTheWheel />}
             {gameType === "Scratch card" && <EntryScratchCard />}
+            {gameType === "Puzzle" && <EntryPuzzle />}
           </div>
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
             Powered by Gamelogo
           </div>
         </div>

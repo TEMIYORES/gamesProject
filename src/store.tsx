@@ -6,11 +6,13 @@ import quizRawFormDataReducer from "./slices/quizRawFormData";
 import scratchCardDataReducer from "./slices/scratchCard";
 import gameTypeReducer from "./slices/gameType";
 import allGamesReducer from "./slices/allGames";
+import puzzleReducer from "./slices/puzzle";
 const store = configureStore({
   reducer: {
     auth: authSliceReducer,
     allGames: allGamesReducer,
     spinthewheelData: spinthewheelSettingsReducer,
+    puzzleData: puzzleReducer,
     scratchCardData: scratchCardDataReducer,
     quizRawFormData: quizRawFormDataReducer,
     gameTypeData: gameTypeReducer,

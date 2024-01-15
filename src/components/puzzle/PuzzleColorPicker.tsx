@@ -2,7 +2,7 @@ import { ArrowDown2, ArrowUp2 } from "iconsax-react";
 import React, { useState } from "react";
 import { ChromePicker, ColorResult } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
-import { getScratchCardData, setScratchCard } from "../../slices/scratchCard";
+import { getPuzzleData, setPuzzle } from "../../slices/puzzle";
 
 interface ColorPickerProps {
   defaultColor: string;
@@ -10,33 +10,33 @@ interface ColorPickerProps {
   handleColorWheel?: (color: string, index: number) => void;
 }
 
-const ScratchCardColorPicker: React.FC<ColorPickerProps> = ({
+const PuzzleColorPicker: React.FC<ColorPickerProps> = ({
   defaultColor,
   name,
   handleColorWheel,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>(defaultColor);
-  const scratchCardData = useSelector(getScratchCardData);
+  const puzzleData = useSelector(getPuzzleData);
   const dispatch = useDispatch();
   const handleColorChange = (color: ColorResult) => {
     setSelectedColor(color.hex);
-    const updateScratchCardData = { ...scratchCardData };
+    const updatePuzzleData = { ...puzzleData };
 
     if (name === "background") {
-      updateScratchCardData.background = {
-        ...updateScratchCardData.background,
+      updatePuzzleData.background = {
+        ...updatePuzzleData.background,
         color: color.hex,
       };
     }
     if (name === "mobile_background") {
-      updateScratchCardData.mobileBackground = {
-        ...updateScratchCardData.mobileBackground,
+      updatePuzzleData.mobileBackground = {
+        ...updatePuzzleData.mobileBackground,
         color: color.hex,
       };
     }
 
-    dispatch(setScratchCard(updateScratchCardData));
+    dispatch(setPuzzle(updatePuzzleData));
     if (handleColorWheel !== undefined)
       handleColorWheel(color.hex, parseInt(name));
   };
@@ -81,4 +81,4 @@ const ScratchCardColorPicker: React.FC<ColorPickerProps> = ({
   );
 };
 
-export default ScratchCardColorPicker;
+export default PuzzleColorPicker;

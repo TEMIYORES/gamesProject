@@ -10,14 +10,9 @@ import { setGameType } from "../../slices/gameType";
 import {
   getSpinTheWheelSetting,
   setSpinTheWheelSetting,
-  spinTheWheelType,
 } from "../../slices/spinthewheel";
-import { useEffect, useState } from "react";
-import {
-  getScratchCardData,
-  scratchCardType,
-  setScratchCard,
-} from "../../slices/scratchCard";
+import { getScratchCardData, setScratchCard } from "../../slices/scratchCard";
+import { getPuzzleData, setPuzzle } from "../../slices/puzzle";
 
 const Home = () => {
   const Menus = [
@@ -56,6 +51,7 @@ const Home = () => {
   const navigate = useNavigate();
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
+  const puzzleSetting = useSelector(getPuzzleData);
 
   const generateShortCode = () => {
     const length = 6;
@@ -81,6 +77,11 @@ const Home = () => {
       const updateGameSetting = { ...scratchCardSetting };
       updateGameSetting.id = generateShortCode();
       dispatch(setScratchCard(updateGameSetting));
+    }
+    if (name === "Puzzle") {
+      const updateGameSetting = { ...puzzleSetting };
+      updateGameSetting.id = generateShortCode();
+      dispatch(setPuzzle(updateGameSetting));
     }
     navigate("/entry");
   };

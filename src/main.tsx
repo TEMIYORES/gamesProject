@@ -14,7 +14,7 @@ import WithNavbar from "./components/WithNavbar";
 import ScratchCard from "./screens/scratchCard/ScratchCardSetting.tsx";
 import Quiz from "./screens/quiz/Quiz.tsx";
 import CodeGiveAway from "./screens/codeGiveAway/CodeGiveAway.tsx";
-import Puzzle from "./screens/puzzle/Puzzle.tsx";
+import Puzzle from "./screens/puzzle/PuzzleSetting.tsx";
 import ReferralCampaign from "./screens/referralCampaign/ReferralCampaign.tsx";
 // import SpinTheWheelSettings from "./screens/spinTheWheel/SpinTheWheelSetting.tsx";
 import { Provider } from "react-redux";

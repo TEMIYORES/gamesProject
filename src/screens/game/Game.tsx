@@ -15,14 +15,18 @@ import {
 } from "../../slices/spinthewheel";
 import GameScratchCard from "../scratchCard/GameScratchCard";
 import { getScratchCardData, scratchCardType } from "../../slices/scratchCard";
+import PuzzleSetting from "../puzzle/PuzzleSetting";
+import PreviewPuzzle from "../puzzle/PreviewPuzzle";
+import { getPuzzleData, puzzleType } from "../../slices/puzzle";
 // import SpinTheWheel from "../spinTheWheel/SpinTheWheel";
 const Game = () => {
   const gameType = useSelector(getGameType);
   const [refresh, setRefresh] = useState(false);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
+  const puzzleSetting = useSelector(getPuzzleData);
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | null
+    spinTheWheelType | scratchCardType | puzzleType | null
   >(null);
 
   useEffect(() => {
@@ -32,7 +36,10 @@ const Game = () => {
     if (gameType === "Scratch card") {
       setSelectGameSetting(scratchCardSetting);
     }
-  }, [gameType, scratchCardSetting, spinSetting]);
+    if (gameType === "Puzzle") {
+      setSelectGameSetting(puzzleSetting);
+    }
+  }, [gameType, puzzleSetting, scratchCardSetting, spinSetting]);
 
   return (
     <div className="flex">
@@ -40,6 +47,7 @@ const Game = () => {
         <GameSidebar />
         {gameType === "Spin the wheel" && <SpinTheWheelSetting />}
         {gameType === "Scratch card" && <ScratchCard />}
+        {gameType === "Puzzle" && <PuzzleSetting />}
       </div>
       <div className="hidden md:flex w-[60%] sticky top-0 bottom-0 left-0 h-screen overflow-y-auto flex-col items-start border pt-10 px-10">
         <div className="w-1/5 mx-auto grid grid-cols-4 place-items-center">
@@ -81,6 +89,9 @@ const Game = () => {
           )}
           {gameType === "Scratch card" && (
             <GameScratchCard key={refresh ? "refreshed" : "not-refreshed"} />
+          )}
+          {gameType === "Puzzle" && (
+            <PreviewPuzzle key={refresh ? "refreshed" : "not-refreshed"} />
           )}
         </div>
       </div>
