@@ -26,8 +26,8 @@ const Game = () => {
   const scratchCardSetting = useSelector(getScratchCardData);
   const puzzleSetting = useSelector(getPuzzleData);
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | puzzleType | null
-  >(null);
+    spinTheWheelType | scratchCardType | puzzleType
+  >();
 
   useEffect(() => {
     if (gameType === "Spin the wheel") {
@@ -73,7 +73,16 @@ const Game = () => {
             className="bg-white p-3 rounded-lg border-2 border-slate-300 cursor-pointer"
           />
         </div>
-        <div className="w-full h-screen overflow-y-auto items-start border-4 border-slate-300 bg-white">
+        <div
+          className="w-full h-screen overflow-y-auto items-start border-4 border-slate-300 "
+          style={{
+            backgroundColor: selectedGame?.background.color,
+            backgroundImage: `url(${selectedGame?.background.imgUrl})`,
+            objectFit: "cover",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
           <div className="flex place-items-center w-[95%] mx-auto gap-10 my-3">
             <div className="flex gap-2">
               <div className="w-3 h-3 bg-bgAccent rounded-full"></div>
@@ -93,6 +102,9 @@ const Game = () => {
           {gameType === "Puzzle" && (
             <PreviewPuzzle key={refresh ? "refreshed" : "not-refreshed"} />
           )}
+          <div className="mx-auto w-[40%] my-5 left-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
+            Powered by Gamelogo
+          </div>
         </div>
       </div>
     </div>

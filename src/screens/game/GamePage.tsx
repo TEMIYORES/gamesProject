@@ -1,56 +1,41 @@
 import { useParams } from "react-router";
-import WheelComponent from "../../components/WheelComponent";
 import { spinTheWheelType } from "../../slices/spinthewheel";
-import { useSelector } from "react-redux";
-import { getGameType } from "../../slices/gameType";
 import MainScratchCard from "../scratchCard/MainScratchCard";
+import MainPuzzle from "../puzzle/MainPuzzle";
+import { scratchCardType } from "../../slices/scratchCard";
+import { puzzleType } from "../../slices/puzzle";
+import MainSpinTheWheel from "../spinTheWheel/MainSpinTheWheel";
+import * as LZString from "lz-string";
 
 const GamePage = () => {
   const params = useParams();
   const { gameId } = params;
-  const gameType = useSelector(getGameType);
+
   let publishedGames;
   if (localStorage.getItem("publishedGames")) {
-    publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
+    const getGames = localStorage.getItem("publishedGames");
+    const decompressedGames = LZString.decompress(getGames!);
+    publishedGames = JSON.parse(decompressedGames);
   }
-  const selectedGame: spinTheWheelType[] = publishedGames.filter(
-    (item: any) => item.id === gameId
-  );
-  console.log(selectedGame);
-  const onFinished = (winner: string) => {
-    console.log(winner);
-  };
-  const RenderSpinTheWheel = () => {
-    return (
-      <WheelComponent
-        segments={selectedGame[0].segments}
-        segColors={selectedGame[0].segColors}
-        onFinished={(winner: string) => {
-          onFinished(winner);
-        }}
-        spinFormData={selectedGame[0]}
-        primaryColor={selectedGame[0].border}
-        numberofSpins={selectedGame[0].numberOfSpins}
-        contrastColor="white"
-        buttonText="Spin"
-        isOnlyOnce={false}
-        size={200}
-        upDuration={500}
-        downDuration={600}
-        fontFamily="Arial"
-        id={""}
-      />
+  const selectedGame: spinTheWheelType[] | scratchCardType[] | puzzleType[] =
+    publishedGames.filter(
+      (item: spinTheWheelType | scratchCardType | puzzleType) =>
+        item.id === gameId
     );
-  };
+
   return (
     <div className="w-full h-full relative">
-      {gameType === "Spin the wheel" ? (
-        <RenderSpinTheWheel />
+      {selectedGame[0].gameType === "Spin the wheel" ? (
+        <MainSpinTheWheel data={selectedGame[0] as spinTheWheelType} />
+      ) : selectedGame[0].gameType === "Scratch card" ? (
+        <MainScratchCard data={selectedGame[0] as scratchCardType} />
       ) : (
-        gameType === "Scratch card" && <MainScratchCard />
+        selectedGame[0].gameType === "Puzzle" && (
+          <MainPuzzle data={selectedGame[0] as puzzleType} />
+        )
       )}
 
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
         Powered by Gamelogo
       </div>
     </div>

@@ -6,7 +6,9 @@ import monitorImage from "../../assets/monitor.png";
 import phoneImage from "../../assets/mobile-phone.png";
 import cancelImage from "../../assets/cancel.png";
 import reloadImage from "../../assets/reload.png";
+import * as LZString from "lz-string";
 import {
+  SpinWheelinitialState,
   getSpinTheWheelSetting,
   setSpinTheWheelSetting,
   spinTheWheelType,
@@ -20,18 +22,27 @@ import { setAllGames } from "../../slices/allGames";
 import { useNavigate } from "react-router";
 import RedirectScratchCard from "../scratchCard/RedirectScratchCard";
 import {
+  ScratchcardinitialState,
   getScratchCardData,
   scratchCardType,
   setScratchCard,
 } from "../../slices/scratchCard";
 import ScratchCardImageUploader from "../../components/scratchCard/scratchCardImageUploader";
+import RedirectPuzzle from "../puzzle/RedirectPuzzle";
+import {
+  PuzzleinitialState,
+  getPuzzleData,
+  puzzleType,
+  setPuzzle,
+} from "../../slices/puzzle";
 const Redirect = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchcard = useSelector(getScratchCardData);
+  const puzzleData = useSelector(getPuzzleData);
   const dispatch = useDispatch();
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | null
+    spinTheWheelType | scratchCardType | puzzleType | null
   >(null);
   const navigate = useNavigate();
   useEffect(() => {
@@ -41,7 +52,10 @@ const Redirect = () => {
     if (gameType === "Scratch card") {
       setSelectGameSetting(scratchcard);
     }
-  }, [gameType, scratchcard, spinSetting]);
+    if (gameType === "Puzzle") {
+      setSelectGameSetting(puzzleData);
+    }
+  }, [gameType, scratchcard, spinSetting, puzzleData]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -62,6 +76,9 @@ const Redirect = () => {
       if (gameType === "Scratch card") {
         dispatch(setScratchCard(updateSelectedData));
       }
+      if (gameType === "Puzzle") {
+        dispatch(setPuzzle(updateSelectedData));
+      }
     }
   };
   const handleImageClear = (name: string) => {
@@ -80,12 +97,17 @@ const Redirect = () => {
       if (gameType === "Scratch card") {
         dispatch(setScratchCard(updateSelectedData));
       }
+      if (gameType === "Puzzle") {
+        dispatch(setPuzzle(updateSelectedData));
+      }
     }
   };
   const PublishGame = () => {
     let publishedGames;
     if (localStorage.getItem("publishedGames")) {
-      publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
+      const rawData = localStorage.getItem("publishedGames");
+      publishedGames = JSON.parse(LZString.decompress(rawData!) || "");
+      
     }
     if (publishedGames) {
       if (selectedGame) {
@@ -93,15 +115,19 @@ const Redirect = () => {
         updateSelectedGame.createDate = new Date().toISOString();
         updateSelectedGame.gameStatus = "published";
         const duplicateGame = publishedGames.filter(
-          (game: any) => game.id === updateSelectedGame.id
+          (game: spinTheWheelType | scratchCardType | puzzleType) =>
+            game.id === updateSelectedGame.id
         );
         if (duplicateGame.length) {
           toast.warn("Game already saved!");
           if (gameType === "Spin the wheel") {
-            dispatch(setSpinTheWheelSetting({}));
+            dispatch(setSpinTheWheelSetting(SpinWheelinitialState));
           }
           if (gameType === "Scratch card") {
-            dispatch(setScratchCard({}));
+            dispatch(setScratchCard(ScratchcardinitialState));
+          }
+          if (gameType === "Puzzle") {
+            dispatch(setPuzzle(PuzzleinitialState));
           }
           navigate("/");
           return;
@@ -112,14 +138,20 @@ const Redirect = () => {
         ).map((id) => {
           return updatedGames.find((item) => item.id === id);
         });
-        dispatch(setAllGames([uniqueGames]));
-        localStorage.setItem("publishedGames", JSON.stringify(uniqueGames));
+        console.log({ uniqueGames });
+        const stringifiedGames = JSON.stringify(uniqueGames);
+        const compressedGames = LZString.compress(stringifiedGames);
+        localStorage.setItem("publishedGames", compressedGames);
+
         toast.success("Game published successfully");
         if (gameType === "Spin the wheel") {
-          dispatch(setSpinTheWheelSetting({}));
+          dispatch(setSpinTheWheelSetting(SpinWheelinitialState));
         }
         if (gameType === "Scratch card") {
-          dispatch(setScratchCard({}));
+          dispatch(setScratchCard(ScratchcardinitialState));
+        }
+        if (gameType === "Puzzle") {
+          dispatch(setPuzzle(PuzzleinitialState));
         }
         navigate("/");
       }
@@ -129,12 +161,14 @@ const Redirect = () => {
         updateSelectedGame.createDate = new Date().toISOString();
         updateSelectedGame.gameStatus = "published";
         dispatch(setAllGames([updateSelectedGame]));
-        localStorage.setItem(
-          "publishedGames",
-          JSON.stringify([updateSelectedGame])
-        );
+        const stringifiedGame = JSON.stringify([updateSelectedGame]);
+        const compressedGame = LZString.compress(stringifiedGame);
+        localStorage.setItem("publishedGames", compressedGame);
+
         toast.success("Game published successfully");
-        dispatch(setSpinTheWheelSetting({}));
+        dispatch(setSpinTheWheelSetting(SpinWheelinitialState));
+        dispatch(setScratchCard(ScratchcardinitialState));
+        dispatch(setPuzzle(PuzzleinitialState));
         navigate("/");
       }
     }
@@ -236,7 +270,7 @@ const Redirect = () => {
           </div>
         </div>
       </div>
-      <div className="hidden md:flex w-[60%] sticky top-0 bottom-0 left-0 h-screen overflow-y-auto flex-col items-start border pt-10 px-10">
+      <div className="hidden md:flex w-[60%] sticky top-0 bottom-0 left-0 overflow-y-auto flex-col items-start border pt-10 px-10">
         <div className="w-1/5 mx-auto grid grid-cols-4 place-items-center">
           <img
             src={monitorImage}
@@ -273,8 +307,9 @@ const Redirect = () => {
           <div className="w-full flex flex-col place-items-center justify-center">
             {gameType === "Spin the wheel" && <RedirectSpinTheWheel />}
             {gameType === "Scratch card" && <RedirectScratchCard />}
+            {gameType === "Puzzle" && <RedirectPuzzle />}
           </div>
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
             Powered by Gamelogo
           </div>
         </div>

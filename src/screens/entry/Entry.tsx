@@ -20,13 +20,15 @@ import {
 } from "../../slices/scratchCard";
 import EntryScratchCard from "../scratchCard/EntryScratchCard";
 import EntryPuzzle from "../puzzle/EntryPuzzle";
+import { getPuzzleData, puzzleType, setPuzzle } from "../../slices/puzzle";
 const Entry = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
+  const puzzleSetting = useSelector(getPuzzleData);
   const dispatch = useDispatch();
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | null
+    spinTheWheelType | scratchCardType | puzzleType | null
   >(null);
 
   useEffect(() => {
@@ -36,7 +38,10 @@ const Entry = () => {
     if (gameType === "Scratch card") {
       setSelectGameSetting(scratchCardSetting);
     }
-  }, [gameType, scratchCardSetting, spinSetting]);
+    if (gameType === "Puzzle") {
+      setSelectGameSetting(puzzleSetting);
+    }
+  }, [gameType, puzzleSetting, scratchCardSetting, spinSetting]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -56,6 +61,9 @@ const Entry = () => {
     }
     if (gameType === "Scratch card") {
       dispatch(setScratchCard(updateData));
+    }
+    if (gameType === "Puzzle") {
+      dispatch(setPuzzle(updateData));
     }
   };
   return (

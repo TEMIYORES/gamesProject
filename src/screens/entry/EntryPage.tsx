@@ -1,19 +1,27 @@
 import { useNavigate, useParams } from "react-router";
-
+import { spinTheWheelType } from "../../slices/spinthewheel";
+import { scratchCardType } from "../../slices/scratchCard";
+import { puzzleType } from "../../slices/puzzle";
+import * as LZString from "lz-string";
 const EntryPage = () => {
   const params = useParams();
   const { gameId } = params;
   const navigate = useNavigate();
-
   let publishedGames;
   if (localStorage.getItem("publishedGames")) {
-    publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
+    const getGames = localStorage.getItem("publishedGames");
+    const decompressedGames = LZString.decompress(getGames!);
+    publishedGames = JSON.parse(decompressedGames);
   }
-  const selectedGame = publishedGames.filter((item: any) => item.id === gameId);
+  const selectedGame: spinTheWheelType[] | scratchCardType[] | puzzleType[] =
+    publishedGames.filter(
+      (item: spinTheWheelType | scratchCardType | puzzleType) =>
+        item.id === gameId
+    );
   console.log(selectedGame);
   return (
-    <div className="relative w-[40%] mx-auto justify-center flex flex-col gap-5 mt-20">
-      <div className="font-medium text-4xl text-center">
+    <div className="relative w-[40%] h-screen mx-auto flex flex-col gap-5">
+      <div className="font-medium text-4xl text-center mt-20">
         {selectedGame[0].heading || "[header]"}
       </div>
       <div className="mt-2 text-center">
@@ -40,9 +48,13 @@ const EntryPage = () => {
         className="p-3 bg-primary text-white rounded-md"
         onClick={() => navigate(`/game/${selectedGame[0].id}`)}
       >
-        Start Spinning
+        {selectedGame[0].gameType === "Spin the wheel"
+          ? "Start Spinning"
+          : selectedGame[0].gameType === "Scratch card"
+          ? "Start Scratching"
+          : selectedGame[0].gameType === "Puzzle" && "Start Puzzling"}
       </button>
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
         Powered by Gamelogo
       </div>
     </div>

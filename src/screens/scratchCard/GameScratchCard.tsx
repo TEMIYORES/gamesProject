@@ -109,11 +109,13 @@ const GameScratchCard = () => {
                   <ScratchCard
                     width={300}
                     height={350}
-                    color="red"
+                    color="#000"
+                    onScratch={onScratch}
+                    onStopScratch={onStopScratch}
                     image={IMG}
+                    brushSize={10}
                     finishPercent={scratchCard.scratchPercentage}
                     onComplete={() => console.log("complete")}
-                    brushSize={10}
                   >
                     <img
                       src={imgUrl}
@@ -128,8 +130,11 @@ const GameScratchCard = () => {
                 <ScratchCard
                   width={300}
                   height={350}
-                  color="red"
+                  color="#000"
+                  onScratch={onScratch}
+                  onStopScratch={onStopScratch}
                   image={IMG}
+                  brushSize={10}
                   finishPercent={scratchCard.scratchPercentage}
                   onComplete={() => console.log("complete")}
                 >

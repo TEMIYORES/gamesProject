@@ -1,16 +1,16 @@
 import { useSelector } from "react-redux";
-import { getScratchCardData } from "../../slices/scratchCard";
+import { getPuzzleData } from "../../slices/puzzle";
 
 const EntryPuzzle = () => {
-  const scratchCard = useSelector(getScratchCardData);
+  const puzzleData = useSelector(getPuzzleData);
 
   return (
     <div className="w-[60%] mx-auto justify-center flex flex-col gap-5">
       <div className="font-medium text-4xl text-center">
-        {scratchCard.heading || "[header]"}
+        {puzzleData.heading || "[header]"}
       </div>
       <div className="mt-2 text-center">
-        {scratchCard.description || "[description]"}
+        {puzzleData.description || "[description]"}
       </div>
       <div className="flex flex-col w-full gap-3">
         <div className="w-full flex gap-4">

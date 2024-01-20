@@ -2,14 +2,13 @@ import ScratchCard from "react-scratchcard-v2-temiyores-fork";
 import IMG from "../../assets/scratch_cover.jpeg";
 import sound1 from "../../assets/sounds/sound1.mp3";
 import sound2 from "../../assets/sounds/sound2.mp3";
-import { useSelector } from "react-redux";
 import {
-  getScratchCardData,
+  scratchCardType,
   scratchGameSettingType,
 } from "../../slices/scratchCard";
 import { useEffect, useState } from "react";
-const MainScratchCard = () => {
-  const scratchCard = useSelector(getScratchCardData);
+const MainScratchCard = ({ data }: { data: scratchCardType }) => {
+  const scratchCard = data;
   const getRandomItem = (
     items: scratchGameSettingType[]
   ): scratchGameSettingType | undefined => {

@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { spinTheWheelType } from "./spinthewheel";
+import { puzzleType } from "./puzzle";
+import { scratchCardType } from "./scratchCard";
 
-export interface spinTheWheelProbabilityType {
-  label: string;
-  probability: number;
-  coupon_code: string;
-  isWin: "win" | "no_win";
-  color: string;
-}
-const initialState: spinTheWheelType[] = [];
+// export interface spinTheWheelProbabilityType {
+//   label: string;
+//   probability: number;
+//   coupon_code: string;
+//   isWin: "win" | "no_win";
+//   color: string;
+// }
+const initialState: spinTheWheelType[] | scratchCardType[] | puzzleType[] = [];
 
 const allGames = createSlice({
   name: "games",
@@ -21,7 +23,9 @@ const allGames = createSlice({
   },
 });
 
-export const getAllGames: (state: RootState) => spinTheWheelType[] = (
+export const getAllGames: (
+  state: RootState
+) => spinTheWheelType[] | scratchCardType[] | puzzleType[] = (
   state: RootState
 ) => {
   return state.allGames;

@@ -11,7 +11,7 @@ export interface scratchCardType {
   gameDescription: string;
   gameType: string;
   gameStatus: string;
-  priceWon: string;
+  prizeWon: string;
   redirectBackground: {
     imgName: string;
     imgUrl: string;
@@ -67,7 +67,7 @@ export interface scratchGameSettingType {
   imgUrl: string;
 }
 [];
-const initialState: scratchCardType = {
+export const ScratchcardinitialState: scratchCardType = {
   id: "",
   heading: "",
   description: "",
@@ -77,7 +77,7 @@ const initialState: scratchCardType = {
   gameDescription: "",
   gameType: "Scratch card",
   gameStatus: "",
-  priceWon: "",
+  prizeWon: "",
   background: {
     imgName: "",
     imgUrl: "",
@@ -111,7 +111,7 @@ const initialState: scratchCardType = {
 
 const scratchCardData = createSlice({
   name: "scratchCardData",
-  initialState,
+  initialState:ScratchcardinitialState,
   reducers: {
     setScratchCard: (_state, action) => {
       return action.payload;

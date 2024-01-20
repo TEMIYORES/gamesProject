@@ -51,7 +51,7 @@ export interface spinTheWheelProbabilityType {
   wheelColor: string;
   color: string;
 }
-const initialState: spinTheWheelType = {
+export const SpinWheelinitialState: spinTheWheelType = {
   id: "",
   heading: "",
   description: "",
@@ -89,7 +89,7 @@ const initialState: spinTheWheelType = {
 
 const spinthewheel = createSlice({
   name: "spinthewheel",
-  initialState,
+  initialState: SpinWheelinitialState,
   reducers: {
     setSpinTheWheelSetting: (_state, action) => {
       return action.payload;

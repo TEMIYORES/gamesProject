@@ -4,19 +4,19 @@ import { Profile2User } from "iconsax-react";
 import { CheckSquare, ClipboardText } from "@phosphor-icons/react";
 import image from "../../assets/image.webp";
 import { useEffect, useState } from "react";
-
+import { scratchCardType } from "../../slices/scratchCard";
+import { puzzleType } from "../../slices/puzzle";
+import * as LZString from "lz-string";
 const Games = () => {
-  //   const params = useParams();
-  //   const { gameId } = params;
-  //   const dispatch = useDispatch();
-  //   const navigate = useNavigate();
   const getGames = localStorage.getItem("publishedGames");
-  const [publishedGames, setPublishedGames] = useState<spinTheWheelType[] | []>(
-    []
-  );
+  const [publishedGames, setPublishedGames] = useState<
+    spinTheWheelType[] | scratchCardType[] | puzzleType[] | []
+  >([]);
   useEffect(() => {
     if (getGames) {
-      setPublishedGames(JSON.parse(getGames));
+      const decompressedGames = LZString.decompress(getGames);
+      console.log(JSON.parse(decompressedGames));
+      setPublishedGames(JSON.parse(decompressedGames));
     }
   }, [getGames]);
 
@@ -67,7 +67,7 @@ const Games = () => {
       <Sidebar />
       <div className="w-full py-10 px-20">
         <p className="text-2xl font-semibold mb-5">All Games</p>
-        {publishedGames.length ? <RenderGames /> : <div>No game</div>}
+        {publishedGames?.length ? <RenderGames /> : <div>No game</div>}
       </div>
     </div>
   );

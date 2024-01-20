@@ -1,6 +1,9 @@
 import { EnvelopeOpen, FacebookLogo, TwitterLogo } from "@phosphor-icons/react";
 import { spinTheWheelType } from "../../slices/spinthewheel";
 import { useParams } from "react-router";
+import { scratchCardType } from "../../slices/scratchCard";
+import { puzzleType } from "../../slices/puzzle";
+import * as LZString from "lz-string";
 
 const RedirectPage = () => {
   const params = useParams();
@@ -8,14 +11,18 @@ const RedirectPage = () => {
 
   let publishedGames;
   if (localStorage.getItem("publishedGames")) {
-    publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
+    const getGames = localStorage.getItem("publishedGames");
+    const decompressedGames = LZString.decompress(getGames!);
+    publishedGames = JSON.parse(decompressedGames);
   }
-  const selectedGame: spinTheWheelType[] = publishedGames.filter(
-    (item: any) => item.id === gameId
-  );
+  const selectedGame: spinTheWheelType[] | scratchCardType[] | puzzleType[] =
+    publishedGames.filter(
+      (item: spinTheWheelType | scratchCardType | puzzleType) =>
+        item.id === gameId
+    );
   return (
-    <div className="relative w-[60%] mx-auto justify-center flex flex-col gap-5 mt-20">
-      <div className="font-medium text-4xl text-center">
+    <div className="relative w-[60%] h-screen mx-auto flex flex-col gap-5">
+      <div className="font-medium text-4xl text-center mt-20">
         {selectedGame[0].redirectHeading || "[You've won a Price!]"}
       </div>
       <div className="mt-2 text-center">
@@ -45,7 +52,7 @@ const RedirectPage = () => {
           className="cursor-pointer"
         />
       </div>
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-disabled text-center">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
         Powered by Gamelogo
       </div>
     </div>

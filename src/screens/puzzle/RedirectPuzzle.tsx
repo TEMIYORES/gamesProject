@@ -1,14 +1,14 @@
 import { useSelector } from "react-redux";
 import { EnvelopeOpen, FacebookLogo, TwitterLogo } from "@phosphor-icons/react";
-import { getScratchCardData } from "../../slices/scratchCard";
+import { getPuzzleData } from "../../slices/puzzle";
 
-const RedirectScratchCard = () => {
-  const scratchCard = useSelector(getScratchCardData);
+const RedirectPuzzle = () => {
+  const puzzleData = useSelector(getPuzzleData);
 
   return (
     <div
       style={{
-        backgroundImage: `url(${scratchCard.redirectBackground.imgUrl})`,
+        backgroundImage: `url(${puzzleData.redirectBackground.imgUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         objectFit: "cover",
@@ -17,14 +17,14 @@ const RedirectScratchCard = () => {
     >
       <div className="w-[60%] mt-20 mx-auto justify-center flex flex-col gap-5">
         <div className="font-medium text-4xl text-center">
-          {scratchCard.redirectHeading || "[You've won a Price!]"}
+          {puzzleData.redirectHeading || "[You've won a Price!]"}
         </div>
         <div className="mt-2 text-center">
-          {scratchCard.redirectDescription ||
+          {puzzleData.redirectDescription ||
             "[Check your email to get your coupon code!]"}
         </div>
         <div className="w-full gap-3 bg-inputBg py-3 font-light text-xl text-center">
-          {!scratchCard.prizeWon ? "PRIZE WON" : scratchCard.prizeWon}
+          {!puzzleData.priceWon ? "PRIZE WON" : puzzleData.priceWon}
         </div>
         <div className="flex gap-5 justify-center text-white rounded-md">
           <FacebookLogo
@@ -51,4 +51,4 @@ const RedirectScratchCard = () => {
   );
 };
 
-export default RedirectScratchCard;
+export default RedirectPuzzle;

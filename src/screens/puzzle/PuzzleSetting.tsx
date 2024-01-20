@@ -1,10 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ChangeEvent } from "react";
-import {
-  HourglassMedium,
-  ToggleLeft,
-  ToggleRight,
-} from "@phosphor-icons/react";
+import { ToggleLeft, ToggleRight } from "@phosphor-icons/react";
 import PuzzleSoundEffect from "../../components/puzzle/PuzzleSoundEffect";
 import {
   Sound,
@@ -35,6 +31,13 @@ const PuzzleSetting = () => {
         imgUrl: "",
       };
     }
+    if (name === "selected_image") {
+      updatePuzzleData.selectedImage = {
+        ...updatePuzzleData.selectedImage,
+        imgName: "",
+        imgUrl: "",
+      };
+    }
     dispatch(setPuzzle(updatePuzzleData));
   };
 
@@ -52,6 +55,31 @@ const PuzzleSetting = () => {
     if (content === "couponCode") {
       updatePuzzleData.couponCode = e.target.value;
     }
+    if (content === "min1") {
+      updatePuzzleData.setTimer = {
+        ...updatePuzzleData.setTimer,
+        min1: e.target.value,
+      };
+    }
+    if (content === "min2") {
+      updatePuzzleData.setTimer = {
+        ...updatePuzzleData.setTimer,
+        min2: e.target.value,
+      };
+    }
+    if (content === "sec1") {
+      updatePuzzleData.setTimer = {
+        ...updatePuzzleData.setTimer,
+        sec1: e.target.value,
+      };
+    }
+    if (content === "sec2") {
+      updatePuzzleData.setTimer = {
+        ...updatePuzzleData.setTimer,
+        sec2: e.target.value,
+      };
+    }
+
     dispatch(setPuzzle(updatePuzzleData));
   };
 
@@ -207,7 +235,41 @@ const PuzzleSetting = () => {
         </div>
         <div className="flex gap-10 place-items-center">
           <label className="w-2/5 font-semibold">Set Timer</label>
-          <HourglassMedium size={32} color="#000000" weight="fill" />
+          {/* <HourglassMedium size={32} color="#000000" weight="fill" /> */}
+          <div className="grid grid-cols-1">
+            <div className="grid grid-cols-2 text-center gap-x-3 bg-inputBg rounded-md p-4">
+              <label>Min</label>
+              <label>Sec</label>
+              <div className="grid grid-cols-2">
+                <input
+                  maxLength={1}
+                  value={puzzleData.setTimer.min1}
+                  onChange={(e) => handleTextChange(e, "min1")}
+                  className="outline-none border border-slate-300 w-7 px-2 py-1 rounded-md"
+                />
+                <input
+                  maxLength={1}
+                  value={puzzleData.setTimer.min2}
+                  onChange={(e) => handleTextChange(e, "min2")}
+                  className="outline-none border border-slate-300 w-7 px-2 py-1 rounded-md"
+                />
+              </div>
+              <div className="grid grid-cols-2">
+                <input
+                  maxLength={1}
+                  value={puzzleData.setTimer.sec1}
+                  onChange={(e) => handleTextChange(e, "sec1")}
+                  className="outline-none border border-slate-300 w-7 px-2 py-1 rounded-md"
+                />
+                <input
+                  maxLength={1}
+                  value={puzzleData.setTimer.sec2}
+                  onChange={(e) => handleTextChange(e, "sec2")}
+                  className="outline-none border border-slate-300 w-7 px-2 py-1 rounded-md"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex gap-10 place-items-center">

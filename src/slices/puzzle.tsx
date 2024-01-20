@@ -23,10 +23,16 @@ export interface puzzleType {
     name: string;
     url: string;
   };
+  prizeWon: string;
   retryLimit: string;
   couponCode: string;
   timer: boolean;
-  setTimer: string;
+  setTimer: {
+    min1: string;
+    min2: string;
+    sec1: string;
+    sec2: string;
+  };
   redirectBackground: {
     imgName: string;
     imgUrl: string;
@@ -57,7 +63,7 @@ export interface Sound {
   url: string;
 }
 
-const initialState: puzzleType = {
+export const PuzzleinitialState: puzzleType = {
   id: "",
   heading: "",
   description: "",
@@ -66,8 +72,14 @@ const initialState: puzzleType = {
   gameHeading: "",
   gameDescription: "",
   gameType: "Puzzle",
+  prizeWon: "",
   timer: false,
-  setTimer: "",
+  setTimer: {
+    min1: "0",
+    min2: "1",
+    sec1: "0",
+    sec2: "0",
+  },
   winSound: {
     id: null,
     name: "",
@@ -109,7 +121,7 @@ const initialState: puzzleType = {
 
 const puzzleData = createSlice({
   name: "scratchCardData",
-  initialState,
+  initialState: PuzzleinitialState,
   reducers: {
     setPuzzle: (_state, action) => {
       return action.payload;

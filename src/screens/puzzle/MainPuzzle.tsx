@@ -1,23 +1,30 @@
 import Puzzle from "react-image-puzzle";
-import { useSelector } from "react-redux";
-import { getPuzzleData } from "../../slices/puzzle";
-import PuzzleTimer from "../../components/puzzle/PuzzleTimer";
+import { puzzleType } from "../../slices/puzzle";
 import { useEffect, useState } from "react";
+import PuzzleTimer from "../../components/puzzle/PuzzleTimer";
 import sound1 from "../../assets/sounds/sound1.mp3";
 import sound2 from "../../assets/sounds/sound2.mp3";
 
-const PreviewPuzzle = () => {
-  const puzzleData = useSelector(getPuzzleData);
+interface puzzleDataType {
+  data: puzzleType;
+}
+const MainPuzzle = ({ data }: puzzleDataType) => {
+  const puzzleData = data;
   const [isTimeup, setIsTimeUp] = useState<null | boolean>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [refresh, setRefresh] = useState(false);
-
   const min = parseInt(puzzleData.setTimer.min1 + puzzleData.setTimer.min2);
   const sec = parseInt(puzzleData.setTimer.sec1 + puzzleData.setTimer.sec2);
-  const [timeUpaudio, setTimeUpAudio] = useState<HTMLAudioElement>(new Audio());
-  const [winAudio, setWinAudio] = useState<HTMLAudioElement>(new Audio());
   const result: number = min * 60 + sec;
 
+  useEffect(() => {
+    if (isTimeup === null) {
+      console.log("hello");
+      setRefresh(true);
+    }
+  }, [isTimeup]);
+  const [timeUpaudio, setTimeUpAudio] = useState<HTMLAudioElement>(new Audio());
+  const [winAudio, setWinAudio] = useState<HTMLAudioElement>(new Audio());
   useEffect(() => {
     if (puzzleData.timeUpSound.name === "Sound 1") {
       setTimeUpAudio(new Audio(sound1));
@@ -30,13 +37,6 @@ const PreviewPuzzle = () => {
       setWinAudio(new Audio(sound2));
     }
   }, [puzzleData.timeUpSound.name, puzzleData.winSound.name]);
-
-  useEffect(() => {
-    if (isTimeup === null) {
-      console.log("hello");
-      setRefresh(true);
-    }
-  }, [isTimeup]);
 
   const onTimeUp = () => {
     if (timeUpaudio.paused) {
@@ -64,7 +64,7 @@ const PreviewPuzzle = () => {
         <div className="font-medium text-4xl text-center">
           {puzzleData.gameHeading || "[header]"}
         </div>
-        <div className="mt-2 text-center mb-5">
+        <div className="mt-2 text-center mb-10">
           {puzzleData.gameDescription || "[description]"}
         </div>
         {puzzleData.timer && (
@@ -78,6 +78,7 @@ const PreviewPuzzle = () => {
             }}
           />
         )}
+
         {isTimeup === null ? (
           <Puzzle
             level={4 || puzzleData.selectGrid}
@@ -112,4 +113,4 @@ const PreviewPuzzle = () => {
   );
 };
 
-export default PreviewPuzzle;
+export default MainPuzzle;

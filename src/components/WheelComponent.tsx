@@ -304,8 +304,8 @@ const WheelComponent = ({
         backgroundImage: `url(${spinTheWheelsettings?.background.imgUrl})`,
       }}
     >
-      <span className="text-base font-bold mb-[-50px]">Number of spins: {spinsLeft}</span>
-      <div className="relativ ">
+      <span className="text-base font-bold ">Number of spins: {spinsLeft}</span>
+      <div className="relative">
         <canvas
           className={`mx-auto flex justify-center items-center`}
           id="canvas"
