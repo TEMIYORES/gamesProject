@@ -21,14 +21,17 @@ import {
 import EntryScratchCard from "../scratchCard/EntryScratchCard";
 import EntryPuzzle from "../puzzle/EntryPuzzle";
 import { getPuzzleData, puzzleType, setPuzzle } from "../../slices/puzzle";
+import { getTictactoeData, setTictactoe, tictactoeType } from "../../slices/tictactoe";
+import EntryTictactoe from "../tictactoe/EntryTictactoe";
 const Entry = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
   const puzzleSetting = useSelector(getPuzzleData);
+  const tictactoeSetting = useSelector(getTictactoeData);
   const dispatch = useDispatch();
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | puzzleType | null
+    spinTheWheelType | scratchCardType | puzzleType | tictactoeType | null
   >(null);
 
   useEffect(() => {
@@ -41,7 +44,10 @@ const Entry = () => {
     if (gameType === "Puzzle") {
       setSelectGameSetting(puzzleSetting);
     }
-  }, [gameType, puzzleSetting, scratchCardSetting, spinSetting]);
+    if (gameType === "Tic tac toe") {
+      setSelectGameSetting(tictactoeSetting);
+    }
+  }, [gameType, puzzleSetting, scratchCardSetting, spinSetting, tictactoeSetting]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -64,6 +70,9 @@ const Entry = () => {
     }
     if (gameType === "Puzzle") {
       dispatch(setPuzzle(updateData));
+    }
+    if (gameType === "Tic tac toe") {
+      dispatch(setTictactoe(updateData));
     }
   };
   return (
@@ -170,6 +179,7 @@ const Entry = () => {
             {gameType === "Spin the wheel" && <PreviewSpinTheWheel />}
             {gameType === "Scratch card" && <EntryScratchCard />}
             {gameType === "Puzzle" && <EntryPuzzle />}
+            {gameType === "Tic tac toe" && <EntryTictactoe />}
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
             Powered by Gamelogo

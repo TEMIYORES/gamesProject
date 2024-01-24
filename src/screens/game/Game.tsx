@@ -18,6 +18,9 @@ import { getScratchCardData, scratchCardType } from "../../slices/scratchCard";
 import PuzzleSetting from "../puzzle/PuzzleSetting";
 import PreviewPuzzle from "../puzzle/PreviewPuzzle";
 import { getPuzzleData, puzzleType } from "../../slices/puzzle";
+import { getTictactoeData, tictactoeType } from "../../slices/tictactoe";
+import PreviewTictactoe from "../tictactoe/PreviewTictactoe";
+import TictactoeSetting from "../tictactoe/TictactoeSetting";
 // import SpinTheWheel from "../spinTheWheel/SpinTheWheel";
 const Game = () => {
   const gameType = useSelector(getGameType);
@@ -25,8 +28,9 @@ const Game = () => {
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
   const puzzleSetting = useSelector(getPuzzleData);
+  const tictactoeSetting = useSelector(getTictactoeData);
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | puzzleType
+    spinTheWheelType | scratchCardType | puzzleType | tictactoeType
   >();
 
   useEffect(() => {
@@ -39,7 +43,16 @@ const Game = () => {
     if (gameType === "Puzzle") {
       setSelectGameSetting(puzzleSetting);
     }
-  }, [gameType, puzzleSetting, scratchCardSetting, spinSetting]);
+    if (gameType === "Tic tac toe") {
+      setSelectGameSetting(tictactoeSetting);
+    }
+  }, [
+    gameType,
+    puzzleSetting,
+    scratchCardSetting,
+    spinSetting,
+    tictactoeSetting,
+  ]);
 
   return (
     <div className="flex">
@@ -48,6 +61,7 @@ const Game = () => {
         {gameType === "Spin the wheel" && <SpinTheWheelSetting />}
         {gameType === "Scratch card" && <ScratchCard />}
         {gameType === "Puzzle" && <PuzzleSetting />}
+        {gameType === "Tic tac toe" && <TictactoeSetting />}
       </div>
       <div className="hidden md:flex w-[60%] sticky top-0 bottom-0 left-0 h-screen overflow-y-auto flex-col items-start border pt-10 px-10">
         <div className="w-1/5 mx-auto grid grid-cols-4 place-items-center">
@@ -101,6 +115,9 @@ const Game = () => {
           )}
           {gameType === "Puzzle" && (
             <PreviewPuzzle key={refresh ? "refreshed" : "not-refreshed"} />
+          )}
+          {gameType === "Tic tac toe" && (
+            <PreviewTictactoe key={refresh ? "refreshed" : "not-refreshed"} />
           )}
           <div className="mx-auto w-[40%] my-5 left-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
             Powered by Gamelogo

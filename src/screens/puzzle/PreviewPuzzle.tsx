@@ -33,7 +33,6 @@ const PreviewPuzzle = () => {
 
   useEffect(() => {
     if (isTimeup === null) {
-      console.log("hello");
       setRefresh(true);
     }
   }, [isTimeup]);

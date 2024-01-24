@@ -35,14 +35,24 @@ import {
   puzzleType,
   setPuzzle,
 } from "../../slices/puzzle";
+import {
+  TictactoeinitialState,
+  getTictactoeData,
+  setTictactoe,
+  tictactoeType,
+} from "../../slices/tictactoe";
+import TictactoeImageUploader from "../../components/tictactoe/TictactoeImageUploader";
+import RedirectTictactoe from "../tictactoe/RedirectTictactoe";
 const Redirect = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchcard = useSelector(getScratchCardData);
   const puzzleData = useSelector(getPuzzleData);
+  const tictactoeData = useSelector(getTictactoeData);
+
   const dispatch = useDispatch();
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | puzzleType | null
+    spinTheWheelType | scratchCardType | puzzleType | tictactoeType | null
   >(null);
   const navigate = useNavigate();
   useEffect(() => {
@@ -55,7 +65,10 @@ const Redirect = () => {
     if (gameType === "Puzzle") {
       setSelectGameSetting(puzzleData);
     }
-  }, [gameType, scratchcard, spinSetting, puzzleData]);
+    if (gameType === "Tic tac toe") {
+      setSelectGameSetting(tictactoeData);
+    }
+  }, [gameType, scratchcard, spinSetting, puzzleData, tictactoeData]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -79,6 +92,9 @@ const Redirect = () => {
       if (gameType === "Puzzle") {
         dispatch(setPuzzle(updateSelectedData));
       }
+      if (gameType === "Tic tac toe") {
+        dispatch(setTictactoe(updateSelectedData));
+      }
     }
   };
   const handleImageClear = (name: string) => {
@@ -100,6 +116,9 @@ const Redirect = () => {
       if (gameType === "Puzzle") {
         dispatch(setPuzzle(updateSelectedData));
       }
+      if (gameType === "Tic tac toe") {
+        dispatch(setTictactoe(updateSelectedData));
+      }
     }
   };
   const PublishGame = () => {
@@ -107,7 +126,6 @@ const Redirect = () => {
     if (localStorage.getItem("publishedGames")) {
       const rawData = localStorage.getItem("publishedGames");
       publishedGames = JSON.parse(LZString.decompress(rawData!) || "");
-      
     }
     if (publishedGames) {
       if (selectedGame) {
@@ -128,6 +146,9 @@ const Redirect = () => {
           }
           if (gameType === "Puzzle") {
             dispatch(setPuzzle(PuzzleinitialState));
+          }
+          if (gameType === "Tic tac toe") {
+            dispatch(setTictactoe(TictactoeinitialState));
           }
           navigate("/");
           return;
@@ -153,6 +174,9 @@ const Redirect = () => {
         if (gameType === "Puzzle") {
           dispatch(setPuzzle(PuzzleinitialState));
         }
+        if (gameType === "Tic tac toe") {
+          dispatch(setTictactoe(TictactoeinitialState));
+        }
         navigate("/");
       }
     } else {
@@ -169,6 +193,7 @@ const Redirect = () => {
         dispatch(setSpinTheWheelSetting(SpinWheelinitialState));
         dispatch(setScratchCard(ScratchcardinitialState));
         dispatch(setPuzzle(PuzzleinitialState));
+        dispatch(setPuzzle(TictactoeinitialState));
         navigate("/");
       }
     }
@@ -210,9 +235,11 @@ const Redirect = () => {
               </label>
               {gameType === "Spin the wheel" ? (
                 <SpinTheWheelImageUploader name="redirect_background" />
+              ) : gameType === "Scratch card" ? (
+                <ScratchCardImageUploader name="redirect_background" />
               ) : (
-                gameType === "Scratch card" && (
-                  <ScratchCardImageUploader name="redirect_background" />
+                gameType === "Tic tac toe" && (
+                  <TictactoeImageUploader name="redirect_background" />
                 )
               )}
               {selectedGame?.redirectBackground.imgName && (
@@ -308,6 +335,7 @@ const Redirect = () => {
             {gameType === "Spin the wheel" && <RedirectSpinTheWheel />}
             {gameType === "Scratch card" && <RedirectScratchCard />}
             {gameType === "Puzzle" && <RedirectPuzzle />}
+            {gameType === "Tic tac toe" && <RedirectTictactoe />}
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
             Powered by Gamelogo

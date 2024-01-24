@@ -13,7 +13,9 @@
     "@phosphor-icons/react": "^2.0.15",
     "@reduxjs/toolkit": "^2.0.1",
     "@types/react-color": "^3.0.10",
+    "@types/styled-components": "^5.1.34",
     "@types/uuid": "^9.0.7",
+    "framer-motion": "^10.18.0",
     "iconsax-react": "^0.0.8",
     "lz-string": "^1.5.0",
     "moment": "^2.29.4",
@@ -30,6 +32,8 @@
     "react-scratchcard-v2-temiyores-fork": "^1.0.7-fork.1",
     "react-select": "^5.8.0",
     "react-toastify": "^9.1.3",
+    "sass": "^1.70.0",
+    "styled-components": "^6.1.8",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import TictactoeGame from "./tictactoe/TictactoeGame";
 
 const TestScratchCard = () => {
   useEffect(() => {
@@ -17,7 +18,7 @@ const TestScratchCard = () => {
   });
   return (
     <div>
-      <canvas id="yourCanvasId" width={300} height={400} />
+      <TictactoeGame />
     </div>
   );
 };

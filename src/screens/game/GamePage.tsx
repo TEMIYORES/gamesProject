@@ -6,6 +6,8 @@ import { scratchCardType } from "../../slices/scratchCard";
 import { puzzleType } from "../../slices/puzzle";
 import MainSpinTheWheel from "../spinTheWheel/MainSpinTheWheel";
 import * as LZString from "lz-string";
+import { tictactoeType } from "../../slices/tictactoe";
+import MainTictactoe from "../tictactoe/MainTictactoe";
 
 const GamePage = () => {
   const params = useParams();
@@ -17,11 +19,14 @@ const GamePage = () => {
     const decompressedGames = LZString.decompress(getGames!);
     publishedGames = JSON.parse(decompressedGames);
   }
-  const selectedGame: spinTheWheelType[] | scratchCardType[] | puzzleType[] =
-    publishedGames.filter(
-      (item: spinTheWheelType | scratchCardType | puzzleType) =>
-        item.id === gameId
-    );
+  const selectedGame:
+    | spinTheWheelType[]
+    | scratchCardType[]
+    | puzzleType[]
+    | tictactoeType[] = publishedGames.filter(
+    (item: spinTheWheelType | scratchCardType | puzzleType | tictactoeType) =>
+      item.id === gameId
+  );
 
   return (
     <div className="w-full h-full relative">
@@ -29,9 +34,11 @@ const GamePage = () => {
         <MainSpinTheWheel data={selectedGame[0] as spinTheWheelType} />
       ) : selectedGame[0].gameType === "Scratch card" ? (
         <MainScratchCard data={selectedGame[0] as scratchCardType} />
+      ) : selectedGame[0].gameType === "Puzzle" ? (
+        <MainPuzzle data={selectedGame[0] as puzzleType} />
       ) : (
-        selectedGame[0].gameType === "Puzzle" && (
-          <MainPuzzle data={selectedGame[0] as puzzleType} />
+        selectedGame[0].gameType === "Tic tac toe" && (
+          <MainTictactoe data={selectedGame[0] as tictactoeType} />
         )
       )}
 

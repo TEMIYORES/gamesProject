@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { scratchCardType } from "../../slices/scratchCard";
 import { puzzleType } from "../../slices/puzzle";
 import * as LZString from "lz-string";
+import { tictactoeType } from "../../slices/tictactoe";
 
 const RedirectPage = () => {
   const params = useParams();
@@ -15,11 +16,14 @@ const RedirectPage = () => {
     const decompressedGames = LZString.decompress(getGames!);
     publishedGames = JSON.parse(decompressedGames);
   }
-  const selectedGame: spinTheWheelType[] | scratchCardType[] | puzzleType[] =
-    publishedGames.filter(
-      (item: spinTheWheelType | scratchCardType | puzzleType) =>
-        item.id === gameId
-    );
+  const selectedGame:
+    | spinTheWheelType[]
+    | scratchCardType[]
+    | puzzleType[]
+    | tictactoeType[] = publishedGames.filter(
+    (item: spinTheWheelType | scratchCardType | puzzleType | tictactoeType) =>
+      item.id === gameId
+  );
   return (
     <div className="relative w-[60%] h-screen mx-auto flex flex-col gap-5">
       <div className="font-medium text-4xl text-center mt-20">

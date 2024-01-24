@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
-export interface puzzleType {
+export interface giveawayType {
   id: string;
   heading: string;
   description: string;
@@ -11,37 +11,31 @@ export interface puzzleType {
   gameDescription: string;
   gameType: string;
   gameStatus: string;
-  prizeWon: string;
-  selectGrid: string;
-  winSound: {
-    id: number | null;
-    name: string;
-    url: string;
-  };
-  timeUpSound: {
-    id: number | null;
-    name: string;
-    url: string;
-  };
+  priceWon: string;
   retryLimit: string;
   couponCode: string;
-  timer: boolean;
-  setTimer: {
-    min1: string;
-    min2: string;
-    sec1: string;
-    sec2: string;
+  type: string;
+  duration: string;
+  participants: string;
+  isSocialMediaShare: boolean;
+  numberOfShare: number;
+  sharePlatforms: {
+    facebook: "";
+    instagram: "";
+    twitter: "";
+  };
+  isFollowNow: boolean;
+  followPlatforms: {
+    facebook: "";
+    instagram: "";
+    twitter: "";
   };
   redirectBackground: {
     imgName: string;
     imgUrl: string;
     color: string;
   };
-  selectedImage: {
-    imgName: string;
-    imgUrl: string;
-    color: string;
-  };
+
   background: {
     imgName: string;
     imgUrl: string;
@@ -62,42 +56,35 @@ export interface Sound {
   url: string;
 }
 
-export const PuzzleinitialState: puzzleType = {
+export const GiveawayinitialState: giveawayType = {
   id: "",
   heading: "",
   description: "",
   redirectHeading: "",
   redirectDescription: "",
   gameHeading: "",
+  type: "",
   gameDescription: "",
-  gameType: "Puzzle",
-  timer: false,
-  setTimer: {
-    min1: "0",
-    min2: "1",
-    sec1: "0",
-    sec2: "0",
-  },
-  winSound: {
-    id: null,
-    name: "",
-    url: "",
-  },
-  timeUpSound: {
-    id: null,
-    name: "",
-    url: "",
-  },
+  gameType: "Giveaway",
   retryLimit: "",
   couponCode: "",
-  gameStatus: "",
-  prizeWon: "",
-  selectGrid: "",
-  selectedImage: {
-    imgName: "",
-    imgUrl: "",
-    color: "",
+  duration: "",
+  participants: "",
+  isSocialMediaShare: true,
+  numberOfShare: 1,
+  sharePlatforms: {
+    facebook: "",
+    instagram: "",
+    twitter: "",
   },
+  isFollowNow: true,
+  followPlatforms: {
+    facebook: "",
+    instagram: "",
+    twitter: "",
+  },
+  gameStatus: "",
+  priceWon: "",
   background: {
     imgName: "",
     imgUrl: "",
@@ -117,20 +104,20 @@ export const PuzzleinitialState: puzzleType = {
   createDate: "",
 };
 
-const puzzleData = createSlice({
-  name: "puzzleData",
-  initialState: PuzzleinitialState,
+const giveawayData = createSlice({
+  name: "giveawayData",
+  initialState: GiveawayinitialState,
   reducers: {
-    setPuzzle: (_state, action) => {
+    setGiveaway: (_state, action) => {
       return action.payload;
     },
   },
 });
 
-export const getPuzzleData: (state: RootState) => puzzleType = (
+export const getGiveawayData: (state: RootState) => giveawayType = (
   state: RootState
 ) => {
-  return state.puzzleData;
+  return state.giveawayData;
 };
-export const { setPuzzle } = puzzleData.actions;
-export default puzzleData.reducer;
+export const { setGiveaway } = giveawayData.actions;
+export default giveawayData.reducer;

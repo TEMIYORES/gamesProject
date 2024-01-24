@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
-export interface puzzleType {
+export interface tictactoeType {
   id: string;
   heading: string;
   description: string;
@@ -11,37 +11,30 @@ export interface puzzleType {
   gameDescription: string;
   gameType: string;
   gameStatus: string;
-  prizeWon: string;
-  selectGrid: string;
+  priceWon: string;
+  gameBackground: string;
+  gridColor: string;
+  oColor: string;
+  xColor: string;
   winSound: {
     id: number | null;
     name: string;
     url: string;
   };
-  timeUpSound: {
+  loseSound: {
     id: number | null;
     name: string;
     url: string;
   };
+  prizeWon: string;
   retryLimit: string;
   couponCode: string;
-  timer: boolean;
-  setTimer: {
-    min1: string;
-    min2: string;
-    sec1: string;
-    sec2: string;
-  };
   redirectBackground: {
     imgName: string;
     imgUrl: string;
     color: string;
   };
-  selectedImage: {
-    imgName: string;
-    imgUrl: string;
-    color: string;
-  };
+
   background: {
     imgName: string;
     imgUrl: string;
@@ -62,7 +55,7 @@ export interface Sound {
   url: string;
 }
 
-export const PuzzleinitialState: puzzleType = {
+export const TictactoeinitialState: tictactoeType = {
   id: "",
   heading: "",
   description: "",
@@ -70,20 +63,18 @@ export const PuzzleinitialState: puzzleType = {
   redirectDescription: "",
   gameHeading: "",
   gameDescription: "",
-  gameType: "Puzzle",
-  timer: false,
-  setTimer: {
-    min1: "0",
-    min2: "1",
-    sec1: "0",
-    sec2: "0",
-  },
+  gameType: "Tic tac toe",
+  prizeWon: "",
+  gameBackground: "",
+  gridColor: "",
+  oColor: "",
+  xColor: "",
   winSound: {
     id: null,
     name: "",
     url: "",
   },
-  timeUpSound: {
+ loseSound: {
     id: null,
     name: "",
     url: "",
@@ -91,13 +82,7 @@ export const PuzzleinitialState: puzzleType = {
   retryLimit: "",
   couponCode: "",
   gameStatus: "",
-  prizeWon: "",
-  selectGrid: "",
-  selectedImage: {
-    imgName: "",
-    imgUrl: "",
-    color: "",
-  },
+  priceWon: "",
   background: {
     imgName: "",
     imgUrl: "",
@@ -117,20 +102,20 @@ export const PuzzleinitialState: puzzleType = {
   createDate: "",
 };
 
-const puzzleData = createSlice({
-  name: "puzzleData",
-  initialState: PuzzleinitialState,
+const tictactoeData = createSlice({
+  name: "TictactoeData",
+  initialState: TictactoeinitialState,
   reducers: {
-    setPuzzle: (_state, action) => {
+    setTictactoe: (_state, action) => {
       return action.payload;
     },
   },
 });
 
-export const getPuzzleData: (state: RootState) => puzzleType = (
+export const getTictactoeData: (state: RootState) => tictactoeType = (
   state: RootState
 ) => {
-  return state.puzzleData;
+  return state.tictactoeData;
 };
-export const { setPuzzle } = puzzleData.actions;
-export default puzzleData.reducer;
+export const { setTictactoe } = tictactoeData.actions;
+export default tictactoeData.reducer;

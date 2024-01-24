@@ -7,13 +7,17 @@ import scratchCardDataReducer from "./slices/scratchCard";
 import gameTypeReducer from "./slices/gameType";
 import allGamesReducer from "./slices/allGames";
 import puzzleReducer from "./slices/puzzle";
+import tictactoeReducer from "./slices/tictactoe";
+import giveawayReducer from "./slices/giveaway";
 const store = configureStore({
   reducer: {
     auth: authSliceReducer,
     allGames: allGamesReducer,
     spinthewheelData: spinthewheelSettingsReducer,
     puzzleData: puzzleReducer,
+    tictactoeData: tictactoeReducer,
     scratchCardData: scratchCardDataReducer,
+    giveawayData: giveawayReducer,
     quizRawFormData: quizRawFormDataReducer,
     gameTypeData: gameTypeReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,

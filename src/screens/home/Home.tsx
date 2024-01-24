@@ -4,6 +4,7 @@ import scratchCardimage from "../../assets/card.png";
 import quizImage from "../../assets/quiz.png";
 import codeImage from "../../assets/code.svg";
 import puzzleImage from "../../assets/puzzle.png";
+import tictactoeImage from "../../assets/tic-tac-toe.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { setGameType } from "../../slices/gameType";
@@ -13,6 +14,7 @@ import {
 } from "../../slices/spinthewheel";
 import { getScratchCardData, setScratchCard } from "../../slices/scratchCard";
 import { getPuzzleData, setPuzzle } from "../../slices/puzzle";
+import { getTictactoeData, setTictactoe } from "../../slices/tictactoe";
 
 const Home = () => {
   const Menus = [
@@ -32,8 +34,8 @@ const Home = () => {
       icon: quizImage,
     },
     {
-      title: "Code give away",
-      path: "/campaigns/code-give-away/settings",
+      title: "Giveaway",
+      path: "/campaigns/giveaway/settings",
       icon: codeImage,
     },
     {
@@ -42,9 +44,9 @@ const Home = () => {
       icon: puzzleImage,
     },
     {
-      title: "Referral Campaign",
-      path: "/campaigns/referral-campaign",
-      icon: colorWheelimage,
+      title: "Tic tac toe",
+      path: "/campaigns/tictactoe",
+      icon: tictactoeImage,
     },
   ];
   const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const Home = () => {
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
   const puzzleSetting = useSelector(getPuzzleData);
+  const tictactoeSetting = useSelector(getTictactoeData);
 
   const generateShortCode = () => {
     const length = 6;
@@ -82,6 +85,16 @@ const Home = () => {
       const updateGameSetting = { ...puzzleSetting };
       updateGameSetting.id = generateShortCode();
       dispatch(setPuzzle(updateGameSetting));
+    }
+    if (name === "Tic tac toe") {
+      const updateGameSetting = { ...tictactoeSetting };
+      updateGameSetting.id = generateShortCode();
+      dispatch(setTictactoe(updateGameSetting));
+    }
+    if (name === "Giveaway") {
+      const updateGameSetting = { ...tictactoeSetting };
+      updateGameSetting.id = generateShortCode();
+      dispatch(setTictactoe(updateGameSetting));
     }
     navigate("/entry");
   };

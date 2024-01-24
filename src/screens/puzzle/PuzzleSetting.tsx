@@ -277,7 +277,7 @@ const PuzzleSetting = () => {
           <PuzzleSoundEffect label="win" handleSoundData={handleSoundData} />
         </div>
         <div className="flex gap-10 place-items-center">
-          <label className="w-2/5 font-semibold">Win Sound</label>
+          <label className="w-2/5 font-semibold">Time-up Sound</label>
           <PuzzleSoundEffect label="timeUp" handleSoundData={handleSoundData} />
         </div>
         <div className="flex gap-10 place-items-center">
