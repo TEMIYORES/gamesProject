@@ -227,9 +227,9 @@ const PuzzleSetting = () => {
           <label className="w-2/5 font-semibold">Enable Timer</label>
           <div onClick={handleToggleTimer} className="cursor-pointer">
             {puzzleData.timer ? (
-              <ToggleRight size={32} color="#150080" weight="fill" />
+              <ToggleRight size={32} color="#6563FF" weight="fill" />
             ) : (
-              <ToggleLeft size={32} color="#150080" weight="light" />
+              <ToggleLeft size={32} color="#6563FF" weight="light" />
             )}
           </div>
         </div>

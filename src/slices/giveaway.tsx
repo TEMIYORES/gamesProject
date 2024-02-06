@@ -11,31 +11,64 @@ export interface giveawayType {
   gameDescription: string;
   gameType: string;
   gameStatus: string;
-  priceWon: string;
-  retryLimit: string;
-  couponCode: string;
-  type: string;
-  duration: string;
-  participants: string;
-  isSocialMediaShare: boolean;
-  numberOfShare: number;
-  sharePlatforms: {
-    facebook: "";
-    instagram: "";
-    twitter: "";
-  };
-  isFollowNow: boolean;
-  followPlatforms: {
-    facebook: "";
-    instagram: "";
-    twitter: "";
-  };
   redirectBackground: {
     imgName: string;
     imgUrl: string;
     color: string;
   };
-
+  selectType: string;
+  type: {
+    userGenerated: {
+      uploadType: string;
+      buttonText: string;
+      buttonColor: string;
+      afterHeading: string;
+      afterDescription: string;
+      uploadImage: {
+        imgName: string;
+        imgUrl: string;
+        color: string;
+      };
+    };
+    auto: {
+      type: string;
+      codeBackground: {
+        imgName: string;
+        imgUrl: string;
+        color: string;
+      };
+      mobileBackground: {
+        imgName: string;
+        imgUrl: string;
+        color: string;
+      };
+      enableCopy: boolean;
+      enableDownload: boolean;
+      enableShare: boolean;
+    };
+    manual: {
+      type: string;
+      codes: {
+        label: string;
+        text: string;
+        value: string;
+        probability: number;
+      }[];
+      codeBackground: {
+        imgName: string;
+        imgUrl: string;
+        color: string;
+      };
+      mobileBackground: {
+        imgName: string;
+        imgUrl: string;
+        color: string;
+      };
+      enableCopy: boolean;
+      enableDownload: boolean;
+      enableShare: boolean;
+    };
+  };
   background: {
     imgName: string;
     imgUrl: string;
@@ -45,6 +78,30 @@ export interface giveawayType {
     imgName: string;
     imgUrl: string;
     color: string;
+  };
+  duration: {
+    startDate: string;
+    endDate: string;
+  };
+  participants: string;
+  enableSocialShare: boolean;
+  numberOfShare: string;
+  sharePlatforms: {
+    facebook: string;
+    instagram: string;
+    tiktok: string;
+    twitter: string;
+    whatsapp: string;
+    messenger: string;
+  };
+  enableFollowNow: boolean;
+  followPlatforms: {
+    facebook: string;
+    instagram: string;
+    tiktok: string;
+    twitter: string;
+    whatsapp: string;
+    messenger: string;
   };
 
   fields: string[];
@@ -63,32 +120,68 @@ export const GiveawayinitialState: giveawayType = {
   redirectHeading: "",
   redirectDescription: "",
   gameHeading: "",
-  type: "",
   gameDescription: "",
   gameType: "Giveaway",
-  retryLimit: "",
-  couponCode: "",
-  duration: "",
-  participants: "",
-  isSocialMediaShare: true,
-  numberOfShare: 1,
-  sharePlatforms: {
-    facebook: "",
-    instagram: "",
-    twitter: "",
-  },
-  isFollowNow: true,
-  followPlatforms: {
-    facebook: "",
-    instagram: "",
-    twitter: "",
-  },
-  gameStatus: "",
-  priceWon: "",
+  gameStatus: "not published",
   background: {
     imgName: "",
     imgUrl: "",
     color: "",
+  },
+  selectType: "Auto",
+  type: {
+    userGenerated: {
+      uploadType: "",
+      buttonText: "",
+      buttonColor: "",
+      afterHeading: "",
+      afterDescription: "",
+      uploadImage: {
+        imgName: "",
+        imgUrl: "",
+        color: "",
+      },
+    },
+    auto: {
+      type: "",
+      codeBackground: {
+        imgName: "",
+        imgUrl: "",
+        color: "",
+      },
+      mobileBackground: {
+        imgName: "",
+        imgUrl: "",
+        color: "",
+      },
+      enableCopy: true,
+      enableDownload: true,
+      enableShare: true,
+    },
+    manual: {
+      type: "",
+      codes: [
+        {
+          label: "Code 1",
+          text: "",
+          value: "",
+          probability: 100,
+        },
+      ],
+      codeBackground: {
+        imgName: "",
+        imgUrl: "",
+        color: "",
+      },
+      mobileBackground: {
+        imgName: "",
+        imgUrl: "",
+        color: "",
+      },
+      enableCopy: true,
+      enableDownload: true,
+      enableShare: true,
+    },
   },
   redirectBackground: {
     imgName: "",
@@ -100,6 +193,31 @@ export const GiveawayinitialState: giveawayType = {
     imgUrl: "",
     color: "",
   },
+  duration: {
+    startDate: "",
+    endDate: "",
+  },
+  participants: "",
+  enableSocialShare: true,
+  numberOfShare: "",
+  sharePlatforms: {
+    facebook: "",
+    instagram: "",
+    tiktok: "",
+    twitter: "",
+    whatsapp: "",
+    messenger: "",
+  },
+  enableFollowNow: true,
+  followPlatforms: {
+    facebook: "",
+    instagram: "",
+    tiktok: "",
+    twitter: "",
+    whatsapp: "",
+    messenger: "",
+  },
+
   fields: [],
   createDate: "",
 };

@@ -1,40 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
-import ColorPicker from "../../components/ColorPicker";
-import {
-  getQuizRawFormData,
-  initialType,
-  updateQuizRawFormData,
-} from "../../slices/quizRawFormData";
+
 import { ChangeEvent, MouseEvent, useState } from "react";
 import { Add, ArrowRight } from "iconsax-react";
 import { Link } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { getQuizData, quizType, setQuiz } from "../../slices/quiz";
+import QuizColorPicker from "../../components/quiz/QuizColorPicker";
 
-const QuizSettings = () => {
-  const quizformdata = useSelector(getQuizRawFormData);
-  const [quizRawFormData, setQuizRawFormData] =
-    useState<initialType>(quizformdata);
+const QuizSetting = () => {
+  const quizdata = useSelector(getQuizData);
+  const [quizFormData, setQuizFormData] = useState<quizType>(quizdata);
   const [isFormValid, setisFormValid] = useState<boolean>(false);
   const dispatch = useDispatch();
   const handleOnSubmit = () => {
-    quizRawFormData.id = uuid();
-    dispatch(updateQuizRawFormData(quizRawFormData));
+    quizFormData.id = uuid();
+    dispatch(setQuiz(quizFormData));
     setisFormValid(true);
   };
-  const handleBackgroundColor = (data: string) => {
-    const updateRawData = { ...quizRawFormData };
-    updateRawData.backgroundColor = data;
-    setQuizRawFormData(updateRawData);
-  };
-  const handleCardColor = (data: string) => {
-    const updateRawData = { ...quizRawFormData };
-    updateRawData.cardColor = data;
-    setQuizRawFormData(updateRawData);
-  };
+
   const handleTimeLimit = (data: number) => {
-    const updateRawData = { ...quizRawFormData };
+    const updateRawData = { ...quizFormData };
     updateRawData.timeLimit = data;
-    setQuizRawFormData(updateRawData);
+    setQuizFormData(updateRawData);
   };
 
   const handleOptionChange = (
@@ -42,7 +29,7 @@ const QuizSettings = () => {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const updatedRawData = {
-      ...quizRawFormData,
+      ...quizFormData,
     };
     updatedRawData.questions = updatedRawData.questions.map((question, i) => {
       if (i === index) {
@@ -51,14 +38,14 @@ const QuizSettings = () => {
       return question;
     });
     console.log(updatedRawData);
-    setQuizRawFormData(updatedRawData);
+    setQuizFormData(updatedRawData);
   };
   const handleAddQuestion = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const updatedRawData: initialType = {
-      ...quizRawFormData,
+    const updatedRawData: quizType = {
+      ...quizFormData,
       questions: [
-        ...quizRawFormData.questions,
+        ...quizFormData.questions,
         {
           question: "",
           choices: [],
@@ -68,14 +55,14 @@ const QuizSettings = () => {
       ],
     };
 
-    setQuizRawFormData(updatedRawData);
+    setQuizFormData(updatedRawData);
   };
   const handleQuestionChange = (
     index: number,
     event: ChangeEvent<HTMLInputElement>
   ) => {
     const updatedRawData = {
-      ...quizRawFormData,
+      ...quizFormData,
     };
     updatedRawData.questions = updatedRawData.questions.map((question, i) => {
       if (i === index) {
@@ -83,14 +70,14 @@ const QuizSettings = () => {
       }
       return question;
     });
-    setQuizRawFormData(updatedRawData);
+    setQuizFormData(updatedRawData);
   };
   const handleAllOption = (
     index: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const updatedRawData = {
-      ...quizRawFormData,
+      ...quizFormData,
     };
     updatedRawData.questions = updatedRawData.questions.map((question, i) => {
       if (i === index) {
@@ -98,14 +85,14 @@ const QuizSettings = () => {
       }
       return question;
     });
-    setQuizRawFormData(updatedRawData);
+    setQuizFormData(updatedRawData);
   };
   const handleCorrectAnswer = (
     index: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const updatedRawData = {
-      ...quizRawFormData,
+      ...quizFormData,
     };
     updatedRawData.questions = updatedRawData.questions.map((question, i) => {
       if (i === index) {
@@ -113,7 +100,7 @@ const QuizSettings = () => {
       }
       return question;
     });
-    setQuizRawFormData(updatedRawData);
+    setQuizFormData(updatedRawData);
   };
 
   return (
@@ -125,7 +112,7 @@ const QuizSettings = () => {
         className="flex flex-col items-center"
       >
         <div className="flex flex-col items-center w-full mt-5 md:mt-10 ">
-          {quizRawFormData.questions.map((question, index) => {
+          {quizFormData.questions.map((question, index) => {
             return (
               <div
                 className="bg-[#eee] p-2 rounded-sm w-full m-2"
@@ -182,9 +169,7 @@ const QuizSettings = () => {
                         placeholder="Enter options separated by comma ','"
                         className="py-2 px-2 border border-slate-400 outline-none"
                         onChange={(event) => handleAllOption(index, event)}
-                        value={quizRawFormData.questions[index].choices?.join(
-                          ","
-                        )}
+                        value={quizFormData.questions[index].choices?.join(",")}
                       />
                     </div>
                     <div className="w-full flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
@@ -197,7 +182,7 @@ const QuizSettings = () => {
                         placeholder=""
                         className="py-2 px-2 border border-slate-400 outline-none"
                         onChange={(event) => handleCorrectAnswer(index, event)}
-                        value={quizRawFormData.questions[index].correctAnswer}
+                        value={quizFormData.questions[index].correctAnswer}
                       />
                     </div>
                   </>
@@ -213,7 +198,7 @@ const QuizSettings = () => {
                         placeholder=""
                         className="py-2 px-2 border border-slate-400 outline-none"
                         onChange={(event) => handleCorrectAnswer(index, event)}
-                        value={quizRawFormData.questions[index].correctAnswer}
+                        value={quizFormData.questions[index].correctAnswer}
                       />
                     </div>
                   )
@@ -239,7 +224,7 @@ const QuizSettings = () => {
               id="numberInput"
               min={1}
               className="py-2 px-2 border-none outline-none"
-              value={quizRawFormData.timeLimit}
+              value={quizFormData.timeLimit}
               onChange={(event) =>
                 handleTimeLimit(parseFloat(event.target.value))
               }
@@ -250,18 +235,18 @@ const QuizSettings = () => {
               <label htmlFor="contents" className="mb-2 font-bold">
                 Background Color
               </label>
-              <ColorPicker
-                selectedColor={quizRawFormData.backgroundColor}
-                handleColorChange={handleBackgroundColor}
+              <QuizColorPicker
+                name="background"
+                defaultColor={quizFormData.background.color}
               />
             </div>
             <div className="flex flex-col px-5 py-2 mb-3 bg-input_bg rounded-xl">
               <label htmlFor="contents" className="mb-2 font-bold">
                 Card Color
               </label>
-              <ColorPicker
-                selectedColor={quizRawFormData.cardColor}
-                handleColorChange={handleCardColor}
+              <QuizColorPicker
+                name="cardColor"
+                defaultColor={quizFormData.cardColor}
               />
             </div>
           </div>
@@ -289,4 +274,4 @@ const QuizSettings = () => {
   );
 };
 
-export default QuizSettings;
+export default QuizSetting;

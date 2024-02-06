@@ -1,27 +1,27 @@
 import { useSelector } from "react-redux";
-import { getQuizRawFormData, initialType } from "../../slices/quizRawFormData";
 import { Link, useNavigate } from "react-router-dom";
-import QuizContainer from "../../components/quizComponents/QuizContainer";
+import QuizContainer from "../../components/quiz/QuizContainer";
 import { ArrowLeft2, TickCircle } from "iconsax-react";
 import { toast } from "react-toastify";
+import { getQuizData, quizType } from "../../slices/quiz";
 
 const QuizGame = () => {
-  const quizSettings = useSelector(getQuizRawFormData);
+  const quizSetting = useSelector(getQuizData);
   const navigate = useNavigate();
   const publishGame = () => {
-    let publishedGames: initialType[] | "" = "";
+    let publishedGames: quizType[] | "" = "";
     if (localStorage.getItem("publishedGames")) {
       publishedGames = JSON.parse(localStorage.getItem("publishedGames") || "");
     }
 
-    const data: initialType = {
-      ...quizSettings,
+    const data: quizType = {
+      ...quizSetting,
       createDate: new Date(),
       type: "Quiz",
     };
     if (publishedGames) {
       const duplicateGame = publishedGames.filter(
-        (game: initialType) => game.id === data.id
+        (game: quizType) => game.id === data.id
       );
       if (duplicateGame.length) {
         toast.success("Game already saved!");
@@ -29,7 +29,7 @@ const QuizGame = () => {
         window.location.reload();
         return;
       }
-      const updatedGames: initialType[] = [...publishedGames, data];
+      const updatedGames: quizType[] = [...publishedGames, data];
       const uniqueGames = Array.from(
         new Set(updatedGames.map((item) => item.id))
       ).map((id) => {
@@ -51,7 +51,7 @@ const QuizGame = () => {
   };
   return (
     <>
-      {!(quizSettings.questions[0].question === "") ? (
+      {!(quizSetting.questions[0].question === "") ? (
         <>
           <div
             className="absolute bg-white border border-slate-800 flex items-center top-[10%] left-[10%] px-4 py-2 rounded-md gap-2 cursor-pointer"
@@ -68,10 +68,10 @@ const QuizGame = () => {
             Publish game
           </div>
           <QuizContainer
-            questions={quizSettings.questions}
-            backgroundColor={quizSettings.backgroundColor}
-            cardColor={quizSettings.cardColor}
-            timeLimit={quizSettings.timeLimit}
+            questions={quizSetting.questions}
+            backgroundColor={quizSetting.background.color}
+            cardColor={quizSetting.cardColor}
+            timeLimit={quizSetting.timeLimit}
           />
         </>
       ) : (

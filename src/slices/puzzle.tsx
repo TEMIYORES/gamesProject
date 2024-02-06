@@ -90,7 +90,7 @@ export const PuzzleinitialState: puzzleType = {
   },
   retryLimit: "",
   couponCode: "",
-  gameStatus: "",
+  gameStatus: "not published",
   prizeWon: "",
   selectGrid: "",
   selectedImage: {

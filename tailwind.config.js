@@ -6,6 +6,7 @@ export default {
     extend: {
       colors: {
         primary: "#150080",
+        icon:"#6563FF",
         accent: "#d08642",
         bg: "#fff",
         bgAccent: "#e7e8e9",

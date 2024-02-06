@@ -81,7 +81,7 @@ export const TictactoeinitialState: tictactoeType = {
   },
   retryLimit: "",
   couponCode: "",
-  gameStatus: "",
+  gameStatus: "not published",
   priceWon: "",
   background: {
     imgName: "",

@@ -1,16 +1,16 @@
 import { useSelector } from "react-redux";
-import { getQuizData } from "../../slices/quiz";
+import { getGiveawayData } from "../../slices/giveaway";
 
-const EntryQuiz = () => {
-  const quizData = useSelector(getQuizData);
+const EntryGiveaway = () => {
+  const giveawayData = useSelector(getGiveawayData);
 
   return (
     <div className="w-[60%] mx-auto justify-center flex flex-col gap-5">
       <div className="font-medium text-4xl text-center">
-        {quizData.heading || "[header]"}
+        {giveawayData.heading || "[header]"}
       </div>
       <div className="mt-2 text-center">
-        {quizData.description || "[description]"}
+        {giveawayData.description || "[description]"}
       </div>
       <div className="flex flex-col w-full gap-3">
         <div className="w-full flex gap-4">
@@ -33,10 +33,10 @@ const EntryQuiz = () => {
         />
       </div>
       <button className="p-3 bg-primary text-white rounded-md">
-        Start Quizing
+        Start Giveaway
       </button>
     </div>
   );
 };
 
-export default EntryQuiz;
+export default EntryGiveaway;

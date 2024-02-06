@@ -21,7 +21,6 @@ const ScratchCard = () => {
         scratchCardData.gameSetting.length < scratchCardData.numberOfScratchCard
       ) {
         const updateScratchCardData = { ...scratchCardData };
-        console.log("hello");
         const newItems = Array.from(
           {
             length:

@@ -76,7 +76,7 @@ export const ScratchcardinitialState: scratchCardType = {
   gameHeading: "",
   gameDescription: "",
   gameType: "Scratch card",
-  gameStatus: "",
+  gameStatus: "not published",
   prizeWon: "",
   background: {
     imgName: "",

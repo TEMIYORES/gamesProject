@@ -15,6 +15,8 @@ import {
 import { getScratchCardData, setScratchCard } from "../../slices/scratchCard";
 import { getPuzzleData, setPuzzle } from "../../slices/puzzle";
 import { getTictactoeData, setTictactoe } from "../../slices/tictactoe";
+import { getGiveawayData, setGiveaway } from "../../slices/giveaway";
+import { getQuizData, setQuiz } from "../../slices/quiz";
 
 const Home = () => {
   const Menus = [
@@ -55,6 +57,8 @@ const Home = () => {
   const scratchCardSetting = useSelector(getScratchCardData);
   const puzzleSetting = useSelector(getPuzzleData);
   const tictactoeSetting = useSelector(getTictactoeData);
+  const giveawaySetting = useSelector(getGiveawayData);
+  const quizSetting = useSelector(getQuizData);
 
   const generateShortCode = () => {
     const length = 6;
@@ -92,9 +96,14 @@ const Home = () => {
       dispatch(setTictactoe(updateGameSetting));
     }
     if (name === "Giveaway") {
-      const updateGameSetting = { ...tictactoeSetting };
+      const updateGameSetting = { ...giveawaySetting };
       updateGameSetting.id = generateShortCode();
-      dispatch(setTictactoe(updateGameSetting));
+      dispatch(setGiveaway(updateGameSetting));
+    }
+    if (name === "Quiz") {
+      const updateGameSetting = { ...quizSetting };
+      updateGameSetting.id = generateShortCode();
+      dispatch(setQuiz(updateGameSetting));
     }
     navigate("/entry");
   };

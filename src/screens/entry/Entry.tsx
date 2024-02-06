@@ -21,17 +21,37 @@ import {
 import EntryScratchCard from "../scratchCard/EntryScratchCard";
 import EntryPuzzle from "../puzzle/EntryPuzzle";
 import { getPuzzleData, puzzleType, setPuzzle } from "../../slices/puzzle";
-import { getTictactoeData, setTictactoe, tictactoeType } from "../../slices/tictactoe";
+import {
+  getTictactoeData,
+  setTictactoe,
+  tictactoeType,
+} from "../../slices/tictactoe";
 import EntryTictactoe from "../tictactoe/EntryTictactoe";
+import {
+  getGiveawayData,
+  giveawayType,
+  setGiveaway,
+} from "../../slices/giveaway";
+import EntryGiveaway from "../Giveaway/EntryGiveaway";
+import { getQuizData, quizType, setQuiz } from "../../slices/quiz";
+import EntryQuiz from "../quiz/EntryQuiz";
 const Entry = () => {
   const gameType = useSelector(getGameType);
   const spinSetting = useSelector(getSpinTheWheelSetting);
   const scratchCardSetting = useSelector(getScratchCardData);
   const puzzleSetting = useSelector(getPuzzleData);
   const tictactoeSetting = useSelector(getTictactoeData);
+  const giveawaySetting = useSelector(getGiveawayData);
+  const quizSetting = useSelector(getQuizData);
   const dispatch = useDispatch();
   const [selectedGame, setSelectGameSetting] = useState<
-    spinTheWheelType | scratchCardType | puzzleType | tictactoeType | null
+    | spinTheWheelType
+    | scratchCardType
+    | puzzleType
+    | tictactoeType
+    | giveawayType
+    | quizType
+    | null
   >(null);
 
   useEffect(() => {
@@ -47,7 +67,21 @@ const Entry = () => {
     if (gameType === "Tic tac toe") {
       setSelectGameSetting(tictactoeSetting);
     }
-  }, [gameType, puzzleSetting, scratchCardSetting, spinSetting, tictactoeSetting]);
+    if (gameType === "Giveaway") {
+      setSelectGameSetting(giveawaySetting);
+    }
+    if (gameType === "Quiz") {
+      setSelectGameSetting(quizSetting);
+    }
+  }, [
+    gameType,
+    giveawaySetting,
+    puzzleSetting,
+    scratchCardSetting,
+    spinSetting,
+    tictactoeSetting,
+    quizSetting,
+  ]);
 
   const handleTextChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
@@ -73,6 +107,12 @@ const Entry = () => {
     }
     if (gameType === "Tic tac toe") {
       dispatch(setTictactoe(updateData));
+    }
+    if (gameType === "Giveaway") {
+      dispatch(setGiveaway(updateData));
+    }
+    if (gameType === "Quiz") {
+      dispatch(setQuiz(updateData));
     }
   };
   return (
@@ -180,6 +220,8 @@ const Entry = () => {
             {gameType === "Scratch card" && <EntryScratchCard />}
             {gameType === "Puzzle" && <EntryPuzzle />}
             {gameType === "Tic tac toe" && <EntryTictactoe />}
+            {gameType === "Giveaway" && <EntryGiveaway />}
+            {gameType === "Quiz" && <EntryQuiz />}
           </div>
           <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center bg-disabled py-2 px-8 rounded-md">
             Powered by Gamelogo

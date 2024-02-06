@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authSliceReducer from "./slices/authSlice";
 import { apiSlice } from "./slices/apiSlice";
 import spinthewheelSettingsReducer from "./slices/spinthewheel";
-import quizRawFormDataReducer from "./slices/quizRawFormData";
+import quizDataReducer from "./slices/quiz";
 import scratchCardDataReducer from "./slices/scratchCard";
 import gameTypeReducer from "./slices/gameType";
 import allGamesReducer from "./slices/allGames";
@@ -18,7 +18,7 @@ const store = configureStore({
     tictactoeData: tictactoeReducer,
     scratchCardData: scratchCardDataReducer,
     giveawayData: giveawayReducer,
-    quizRawFormData: quizRawFormDataReducer,
+    quizData: quizDataReducer,
     gameTypeData: gameTypeReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
