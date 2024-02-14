@@ -8,12 +8,14 @@ interface ColorPickerProps {
   defaultColor: string;
   name: string;
   handleColorWheel?: (color: string, index: number) => void;
+  index?: number;
 }
 
 const QuizColorPicker: React.FC<ColorPickerProps> = ({
   defaultColor,
   name,
   handleColorWheel,
+  index,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>(defaultColor);
@@ -51,6 +53,20 @@ const QuizColorPicker: React.FC<ColorPickerProps> = ({
       updateQuizData.progressbar = {
         ...updateQuizData.progressbar,
         color: color.hex,
+      };
+    }
+    if (name === "buttonColor" && index !== undefined) {
+      const button =
+        updateQuizData.contentSetting[index].questionSetting.button;
+      updateQuizData.contentSetting[index] = {
+        ...updateQuizData.contentSetting[index],
+        questionSetting: {
+          ...updateQuizData.contentSetting[index].questionSetting,
+          button: {
+            ...button,
+            color: color.hex,
+          },
+        },
       };
     }
 

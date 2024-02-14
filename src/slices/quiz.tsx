@@ -50,13 +50,58 @@ export interface quizType {
     isEnable: boolean;
     color: string;
   };
-  // contentSetting:[
-  //   {
-  //     block:number,
-  //     pointValue:number,
-      
-  //   }
-  // ]
+  contentSetting: {
+    block: number;
+    label: string;
+    pointValue: string;
+    toShow: {
+      question: boolean;
+      image: boolean;
+      video: boolean;
+      text: boolean;
+      button: boolean;
+    };
+    questionSetting: {
+      question: string;
+      answertype: string;
+      shortAnswer: string;
+      paragraph: string;
+      multipleChoice: {
+        option: string;
+        ischecked: boolean;
+      }[];
+      checkbox: {
+        option: string;
+        ischecked: boolean;
+      }[];
+      dropdown: {
+        option: string;
+        ischecked: boolean;
+      }[];
+      fileUpload: {
+        imgName: string;
+        imgUrl: string;
+      };
+      button: {
+        text: string;
+        color: string;
+        link: string;
+        position: string;
+      };
+    };
+
+    image: {
+      imgName: string;
+      imgUrl: string;
+    };
+    videoType:string;
+    video: {
+      videoName: string;
+      videoUrl: string;
+    };
+    text: string;
+    button: string;
+  }[];
   questions: {
     question: string;
     choices?: string[];
@@ -68,7 +113,59 @@ export interface quizType {
   createDate: Date | "";
   type: string;
 }
-const initialState: quizType = {
+export interface contentSettingType {
+  block: number;
+  label: string;
+  pointValue: string;
+  toShow: {
+    question: boolean;
+    image: boolean;
+    video: boolean;
+    text: boolean;
+    button: boolean;
+  };
+  questionSetting: {
+    question: string;
+    answertype: string;
+    shortAnswer: string;
+    paragraph: string;
+    multipleChoice: {
+      option: string;
+      ischecked: boolean;
+    }[];
+    checkbox: {
+      option: string;
+      ischecked: boolean;
+    }[];
+    dropdown: {
+      option: string;
+      ischecked: boolean;
+    }[];
+    fileUpload: {
+      imgName: string;
+      imgUrl: string;
+    };
+    button: {
+      text: string;
+      color: string;
+      link: string;
+      position: string;
+    };
+  };
+
+  image: {
+    imgName: string;
+    imgUrl: string;
+  };
+  videoType:string;
+  video: {
+    videoName: string;
+    videoUrl: string;
+  };
+  text: string;
+  button: string;
+}
+export const InitialState: quizType = {
   id: "",
   heading: "",
   description: "",
@@ -83,6 +180,50 @@ const initialState: quizType = {
     imgUrl: "",
     color: "",
   },
+  contentSetting: [
+    {
+      block: 1,
+      label: "block 1",
+      pointValue: "",
+      toShow: {
+        question: false,
+        image: false,
+        video: false,
+        text: false,
+        button: false,
+      },
+      questionSetting: {
+        question: "",
+        answertype: "Short answer",
+        shortAnswer: "",
+        paragraph: "",
+        multipleChoice: [],
+        checkbox: [],
+        dropdown: [],
+        fileUpload: {
+          imgName: "",
+          imgUrl: "",
+        },
+        button: {
+          text: "",
+          color: "",
+          link: "",
+          position: "",
+        },
+      },
+      image: {
+        imgName: "",
+        imgUrl: "",
+      },
+      videoType:"",
+      video: {
+        videoName: "",
+        videoUrl: "",
+      },
+      text: "",
+      button: "",
+    },
+  ],
   background: {
     imgName: "",
     imgUrl: "",
@@ -134,7 +275,7 @@ const initialState: quizType = {
 
 const quizData = createSlice({
   name: "quizData",
-  initialState,
+  initialState: InitialState,
   reducers: {
     setQuiz: (_state, action) => {
       return action.payload;
