@@ -58,7 +58,7 @@ const CheckBox = ({ index }: { index: number }) => {
             questionSetting: {
               ...questionSetting,
               checkbox: questionSetting.checkbox.filter(
-                (item, index1) => optionIndex !== index1
+                (_item, index1) => optionIndex !== index1
               ),
             },
           };

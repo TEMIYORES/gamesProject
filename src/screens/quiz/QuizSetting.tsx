@@ -19,6 +19,8 @@ import QuizColorPicker from "../../components/quiz/QuizColorPicker";
 import { Add, Trash } from "iconsax-react";
 import { motion, AnimatePresence } from "framer-motion";
 import QuestionTab from "../../components/quiz/QuestionTab";
+import ImageTab from "../../components/quiz/ImageTab";
+import VideoTab from "../../components/quiz/VideoTab";
 
 const QuizSetting = () => {
   const quizData: quizType = useSelector(getQuizData);
@@ -186,6 +188,7 @@ const QuizSetting = () => {
         imgName: "",
         imgUrl: "",
       },
+      videoType: "",
       video: {
         videoName: "",
         videoUrl: "",
@@ -194,7 +197,7 @@ const QuizSetting = () => {
       button: "",
     };
     updateQuizData.contentSetting = [...updateQuizData.contentSetting, newItem];
-    setCurrentIndex(updateQuizData.contentSetting.length -1);
+    setCurrentIndex(updateQuizData.contentSetting.length - 1);
     dispatch(setQuiz(updateQuizData));
   };
   const menuItems = [
@@ -226,7 +229,6 @@ const QuizSetting = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(
     quizData.contentSetting.length - 1
   );
-  const [menuToShow, setMenuToShow] = useState<string>();
   const handleMenuToShow = (index: number, label: string) => {
     const updateQuizData = { ...quizData };
     if (label === "Question") {
@@ -246,12 +248,48 @@ const QuizSetting = () => {
       );
       dispatch(setQuiz(updateQuizData));
     }
+    if (label === "Image") {
+      updateQuizData.contentSetting = updateQuizData.contentSetting.map(
+        (content, index2) => {
+          if (index === index2) {
+            content = {
+              ...content,
+              toShow: {
+                ...updateQuizData.contentSetting[index].toShow,
+                image: true,
+              },
+            };
+          }
+          return content;
+        }
+      );
+      dispatch(setQuiz(updateQuizData));
+    }
+    if (label === "Video") {
+      updateQuizData.contentSetting = updateQuizData.contentSetting.map(
+        (content, index2) => {
+          if (index === index2) {
+            content = {
+              ...content,
+              toShow: {
+                ...updateQuizData.contentSetting[index].toShow,
+                video: true,
+              },
+            };
+          }
+          return content;
+        }
+      );
+      dispatch(setQuiz(updateQuizData));
+    }
     if (label === "New Block") {
       handleBlockAdd();
     }
     setShowMenu(false);
   };
-  console.log(currentIndex);
+  const handleOptionCheck = (index: number) => {
+    setCurrentIndex(index);
+  };
   return (
     <div className="w-full mb-5 p-2">
       <h3 className="mb-5 text-slate-500 font-semibold">Page Setting</h3>
@@ -489,6 +527,12 @@ const QuizSetting = () => {
           <div>
             <div key={index} className="w-full flex justify-around gap-x-5">
               <div className="flex place-items-center gap-3 font-semibold">
+                <input
+                  type="checkbox"
+                  checked={index === currentIndex}
+                  className="w-fit"
+                  onChange={() => handleOptionCheck(index)}
+                />
                 <div>{content.label}</div>
                 {index === quizData.contentSetting.length - 1 &&
                   index !== 0 && (
@@ -517,11 +561,10 @@ const QuizSetting = () => {
               </div>
             </div>
             {content.toShow.question && <QuestionTab index={index} />}
-            {menuToShow === "Image" && <div></div>}
-            {menuToShow === "Video" && <div></div>}
-            {menuToShow === "Text" && <div></div>}
-            {menuToShow === "Button" && <div></div>}
-            {menuToShow === "New Block" && <div></div>}
+            {content.toShow.image && <ImageTab index={index} />}
+            {content.toShow.video && <VideoTab index={index} />}
+            {content.toShow.text && <div></div>}
+            {content.toShow.button && <div></div>}
           </div>
         ))}
       </div>

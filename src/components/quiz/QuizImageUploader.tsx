@@ -67,6 +67,42 @@ const QuizImageUploader: React.FC<ImageUploaderType> = ({
           updateQuizData.gameMobileBackground.imgUrl = uploadedImageUrl;
           dispatch(setQuiz(updateQuizData));
         }
+        if (name === "questionImage") {
+          updateQuizData.contentSetting = updateQuizData.contentSetting.map(
+            (content, index2) => {
+              if (index === index2) {
+                content = {
+                  ...updateQuizData.contentSetting[index],
+                  image: {
+                    ...updateQuizData.contentSetting[index].image,
+                    imgName: file.name,
+                    imgUrl: uploadedImageUrl,
+                  },
+                };
+              }
+              return content;
+            }
+          );
+          dispatch(setQuiz(updateQuizData));
+        }
+        if (name === "questionVideo") {
+          updateQuizData.contentSetting = updateQuizData.contentSetting.map(
+            (content, index2) => {
+              if (index === index2) {
+                content = {
+                  ...updateQuizData.contentSetting[index],
+                  video: {
+                    ...updateQuizData.contentSetting[index].video,
+                    videoName: file.name,
+                    videoUrl: uploadedImageUrl,
+                  },
+                };
+              }
+              return content;
+            }
+          );
+          dispatch(setQuiz(updateQuizData));
+        }
         handleImage !== undefined &&
           handleImage(file.name, uploadedImageUrl, index);
         setToggleUploader(false);
@@ -123,6 +159,43 @@ const QuizImageUploader: React.FC<ImageUploaderType> = ({
             imgName: file.name,
           };
           updateQuizData.gameMobileBackground.imgUrl = droppedImageUrl;
+          dispatch(setQuiz(updateQuizData));
+        }
+        if (name === "questionImage") {
+          updateQuizData.contentSetting = updateQuizData.contentSetting.map(
+            (content, index2) => {
+              if (index === index2) {
+                content = {
+                  ...updateQuizData.contentSetting[index],
+                  image: {
+                    ...updateQuizData.contentSetting[index].image,
+                    imgName: file.name,
+                    imgUrl: droppedImageUrl,
+                  },
+                };
+              }
+              return content;
+            }
+          );
+          updateQuizData.gameMobileBackground.imgUrl = droppedImageUrl;
+          dispatch(setQuiz(updateQuizData));
+        }
+        if (name === "questionVideo") {
+          updateQuizData.contentSetting = updateQuizData.contentSetting.map(
+            (content, index2) => {
+              if (index === index2) {
+                content = {
+                  ...updateQuizData.contentSetting[index],
+                  video: {
+                    ...updateQuizData.contentSetting[index].video,
+                    videoName: file.name,
+                    videoUrl: droppedImageUrl,
+                  },
+                };
+              }
+              return content;
+            }
+          );
           dispatch(setQuiz(updateQuizData));
         }
         handleImage !== undefined &&
@@ -189,6 +262,24 @@ const QuizImageUploader: React.FC<ImageUploaderType> = ({
           id="gameMobileBackground"
           type="file"
           accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+      )}
+      {name === "questionImage" && (
+        <input
+          id="questionImage"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+      )}
+      {name === "questionVideo" && (
+        <input
+          id="questionVideo"
+          type="file"
+          accept="video/*"
           onChange={handleImageUpload}
           className="hidden"
         />
@@ -269,6 +360,34 @@ const QuizImageUploader: React.FC<ImageUploaderType> = ({
                     <img src={imgIcon} alt="img icon" className="w-1/5" />
                     <p className="text-xs text-slate-400">
                       Drop your file or click to browse
+                    </p>
+                  </div>
+                </label>
+              )}
+              {name === "questionImage" && (
+                <label htmlFor="questionImage" className="w-full">
+                  <div
+                    className="mt-8 w-full h-32 border-dashed border-2 border-gray-400 mb-4 rounded-lg cursor-pointer flex flex-col place-items-center justify-center gap-y-2"
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                  >
+                    <img src={imgIcon} alt="img icon" className="w-1/5" />
+                    <p className="text-xs text-slate-400">
+                      Drop your file or click to browse
+                    </p>
+                  </div>
+                </label>
+              )}
+              {name === "questionVideo" && (
+                <label htmlFor="questionVideo" className="w-full">
+                  <div
+                    className="mt-8 w-full h-32 border-dashed border-2 border-gray-400 mb-4 rounded-lg cursor-pointer flex flex-col place-items-center justify-center gap-y-2"
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                  >
+                    <img src={imgIcon} alt="img icon" className="w-1/5" />
+                    <p className="text-xs text-slate-400">
+                      Drop your Video or click to browse
                     </p>
                   </div>
                 </label>

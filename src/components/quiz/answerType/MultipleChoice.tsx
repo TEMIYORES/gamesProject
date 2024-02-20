@@ -61,7 +61,7 @@ const MultipleChoice = ({ index }: { index: number }) => {
             questionSetting: {
               ...questionSetting,
               multipleChoice: questionSetting.multipleChoice.filter(
-                (item, index1) => optionIndex !== index1
+                (_item, index1) => optionIndex !== index1
               ),
             },
           };

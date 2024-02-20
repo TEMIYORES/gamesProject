@@ -61,7 +61,7 @@ const Dropdown = ({ index }: { index: number }) => {
             questionSetting: {
               ...questionSetting,
               dropdown: questionSetting.dropdown.filter(
-                (item, index1) => optionIndex !== index1
+                (_item, index1) => optionIndex !== index1
               ),
             },
           };
